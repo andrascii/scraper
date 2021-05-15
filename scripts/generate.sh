@@ -1,2 +1,2 @@
 #!/bin/bash
-cmake -B build -DCMAKE_TOOLCHAIN_FILE=/Users/andrascii/Work/Repos/vcpkg/scripts/buildsystems/vcpkg.cmake
+cmake -B gdbbuild -DCMAKE_TOOLCHAIN_FILE=$VCPKG_CMAKE_FILE

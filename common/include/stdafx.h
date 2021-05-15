@@ -46,6 +46,7 @@
 //
 // Spdlog
 //
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #if defined(__GNUC__)
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wunknown-pragmas"

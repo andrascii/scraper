@@ -34,4 +34,6 @@
 build
 *.log
 .vscode
+.idea
 .DS_Store
+clionbuild

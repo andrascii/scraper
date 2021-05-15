@@ -15,6 +15,9 @@ public:
       case DbProxyError::kCommandLineParsingError: {
         return "Command line parsing error";
       }
+      case DbProxyError::kHttpServerInitializationFailed: {
+        return "HTTP server initialization failed";
+      }
       default: {
         return "Undefined error code";
       }

@@ -61,7 +61,7 @@ source_group("Precompiled Headers" FILES ${PRECOMPILED_HEADER})
 #
 # creating target
 #
-add_library(${THIS_TARGET_NAME} STATIC ${HEADERS_LIST} ${HEADERS_MOC_FILES} ${SOURCES_LIST})
+add_library(${THIS_TARGET_NAME} STATIC ${HEADERS_LIST} ${HEADERS_MOC_FILES} ${SOURCES_LIST} include/Listener.h src/Listener.cpp include/Session.h src/Session.cpp)
 
 #
 # adding include directories to created target

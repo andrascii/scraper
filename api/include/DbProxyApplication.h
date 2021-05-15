@@ -6,11 +6,11 @@
 
 namespace api {
 
-class DbProxyApplication : public QCoreApplication, public IApplication {
-  Q_OBJECT
-
+class DbProxyApplication : public IApplication {
 public:
-  DbProxyApplication(int argc, char** argv, const DbProxySettings& settings);
+  DbProxyApplication(DbProxySettings  settings);
+
+  std::error_code Start() noexcept;
 
 private:
   DbProxySettings settings_;

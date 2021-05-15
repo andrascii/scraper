@@ -32,6 +32,12 @@
 //
 // Boost
 //
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/version.hpp>
+#include <boost/asio/dispatch.hpp>
+#include <boost/asio/strand.hpp>
+#include <boost/config.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind/placeholders.hpp>
@@ -47,6 +53,7 @@
 //
 // Spdlog
 //
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include <spdlog/logger.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
@@ -100,6 +107,7 @@
 #include <QDir>
 #include <QUrlQuery>
 #include <QJsonDocument>
+#include <QSqlDatabase>
 
 using namespace std::chrono_literals;
 using namespace std::string_literals;

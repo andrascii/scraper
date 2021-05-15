@@ -1,26 +1,36 @@
 #include "DbProxySettings.h"
 #include "Errors.h"
+#include "Exceptions.h"
 
 namespace {
 
-auto constexpr kDbOption{ "d,database" };
-auto constexpr kDbOptionDescription{ "The PostgreSQL database name" };
+constexpr auto kDbOption{ "d,Database" };
+constexpr auto kDbOptionDescription{ "The PostgreSQL Database name" };
 
-auto constexpr kDbHostOption{ "h,host" };
-auto constexpr kDbHostOptionDescription{ "The PostgreSQL database host" };
+constexpr auto kDbUserOption{ "u,dbuser" };
+constexpr auto kDbUserOptionDescription{ "The PostgreSQL Database user" };
 
-auto constexpr kDbPortOption{ "p,port" };
-auto constexpr kDbPortOptionDescription{ "The PostgreSQL database port" };
+constexpr auto kDbUserPasswordOption{ "dbpass" };
+constexpr auto kDbUserPasswordOptionDescription{ "The PostgreSQL Database password" };
 
-auto constexpr kLogLevelOption{ "l,level" };
-auto constexpr kLogLevelOptionDescription{ "Specifies log level [trace/debug/info/warning/error/critical]" };
+constexpr auto kDbHostOption{ "h,host" };
+constexpr auto kDbHostOptionDescription{ "The PostgreSQL Database host" };
 
-auto constexpr kEnableConsoleOption{ "enable-console-logging" };
-auto constexpr kEnableConsoleOptionDescription{ "Enables console logging" };
+constexpr auto kDbPortOption{ "dbport" };
+constexpr auto kDbPortOptionDescription{ "The PostgreSQL Database port" };
+
+constexpr auto kHttpPortOption{ "http-port" };
+constexpr auto kHttpPortOptionDescription{ "The HTTP port to listen" };
+
+constexpr auto kLogLevelOption{ "l,level" };
+constexpr auto kLogLevelOptionDescription{ "Specifies log level [trace/debug/info/warning/error/critical]" };
+
+constexpr auto kEnableConsoleOption{ "enable-console-logging" };
+constexpr auto kEnableConsoleOptionDescription{ "Enables console logging" };
 
 template <typename T>
 T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) {
-  const auto comma_position = option.find(",");
+  const auto comma_position = option.find(',');
   const auto is_composed_option = comma_position != std::string::npos;
 
   if (!is_composed_option) {
@@ -39,26 +49,34 @@ T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) 
 namespace api {
 
 common::Expected<DbProxySettings, std::error_code>
-DbProxySettings::read(
+DbProxySettings::Read(
   int argc,
   char** argv,
   const std::string& app_name,
   const std::string& app_description
-) noexcept {
+) {
   try {
-    cxxopts::Options options{ app_name, app_description };
+    cxxopts::Options options{app_name, app_description};
 
     options.add_options()
       (kDbOption, kDbOptionDescription, cxxopts::value<std::string>()->default_value("scraper"))
+      (kDbUserOption, kDbUserOptionDescription, cxxopts::value<std::string>()->default_value("postgres"))
+      (kDbUserPasswordOption, kDbUserPasswordOptionDescription, cxxopts::value<std::string>()->default_value("postgres"))
       (kDbHostOption, kDbHostOptionDescription, cxxopts::value<std::string>()->default_value("localhost"))
       (kDbPortOption, kDbPortOptionDescription, cxxopts::value<uint16_t>()->default_value("5432"))
+      (kHttpPortOption, kHttpPortOptionDescription, cxxopts::value<uint16_t>()->default_value("13337"))
       (kLogLevelOption, kLogLevelOptionDescription, cxxopts::value<std::string>()->default_value("info"))
+      ("help", "Prints this help message")
       (kEnableConsoleOption, kEnableConsoleOptionDescription);
 
     const auto result = options.parse(argc, argv);
 
-    const auto has_option = [&result](std::string const& option) -> bool {
-      const auto comma_position = option.find(",");
+    if (result.count("help") > 0) {
+      throw HelpMessageRequested{ options.help() };
+    }
+
+    const auto has_option = [&result](const std::string &option) -> bool {
+      const auto comma_position = option.find(',');
       const auto is_composed_option = comma_position != std::string::npos;
 
       if (!is_composed_option) {
@@ -78,8 +96,11 @@ DbProxySettings::read(
 
     Settings settings{};
     settings.database = GetOptionValue<std::string>(result, kDbOption);
+    settings.database_user = GetOptionValue<std::string>(result, kDbUserOption);
+    settings.database_password = GetOptionValue<std::string>(result, kDbUserPasswordOption);
     settings.database_host = GetOptionValue<std::string>(result, kDbHostOption);
     settings.database_port = GetOptionValue<uint16_t>(result, kDbPortOption);
+    settings.http_port = GetOptionValue<uint16_t>(result, kHttpPortOption);
     settings.enable_console_logging = has_option(kEnableConsoleOption);
 
     auto log_level = GetOptionValue<std::string>(result, kLogLevelOption);
@@ -97,36 +118,51 @@ DbProxySettings::read(
     } else if (boost::iequals("critical", log_level)) {
       settings.log_level = spdlog::level::critical;
     } else {
-      throw std::runtime_error{ "Invalid log level argument: " + log_level };
+      throw std::runtime_error{"Invalid log level argument: " + log_level};
     }
 
-    return DbProxySettings{ settings };
+    return DbProxySettings{settings};
+  } catch (const HelpMessageRequested&) {
+    throw;
   } catch (const std::exception& ex) {
     SPDLOG_ERROR("Error initializing settings: {:s}", ex.what());
     return common::Unexpected<std::error_code>{ MakeErrorCode(DbProxyError::kCommandLineParsingError) };
   }
 }
 
-std::string DbProxySettings::database() const noexcept {
+std::string DbProxySettings::Database() const noexcept {
   return settings_.database;
 }
 
-std::string DbProxySettings::databaseHost() const noexcept {
+std::string DbProxySettings::DatabaseUser() const noexcept {
+  return settings_.database_user;
+}
+
+std::string DbProxySettings::DatabasePassword() const noexcept {
+  return settings_.database_password;
+}
+
+std::string DbProxySettings::DatabaseHost() const noexcept {
   return settings_.database_host;
 }
 
-uint16_t DbProxySettings::databasePort() const noexcept {
+uint16_t DbProxySettings::DatabasePort() const noexcept {
   return settings_.database_port;
 }
 
-spdlog::level::level_enum DbProxySettings::logLevel() const noexcept {
+uint16_t DbProxySettings::HttpPort() const noexcept {
+  return settings_.http_port;
+}
+
+spdlog::level::level_enum DbProxySettings::LogLevel() const noexcept {
   return settings_.log_level;
 }
 
-bool DbProxySettings::enableConsoleLogging() const noexcept {
+bool DbProxySettings::EnableConsoleLogging() const noexcept {
   return settings_.enable_console_logging;
 }
 
-DbProxySettings::DbProxySettings(const Settings& settings) : settings_{ settings } {}
+DbProxySettings::DbProxySettings(Settings settings)
+  : settings_{ std::move( settings ) } {}
 
 }
