@@ -3,15 +3,17 @@ cmake_minimum_required(VERSION 3.16)
 include(make_coverage_target)
 include(make_executable_sanitized_target)
 
-set(THIS_TARGET_NAME ${ECHO_LIB_TESTS})
+set(THIS_TARGET_NAME ${TESTS_BIN})
 project(${THIS_TARGET_NAME})
 
 #
 # deps include directories
 #
-set(ECHO_LIB_INCLUDE_DIR "../${ECHO_LIB}/include")
-set(COMMON_LIB_INCLUDE_DIR "../${COMMON_LIB}/include")
-set(EXPECTED_LIB_INCLUDE_DIR "../tl/")
+list(APPEND ADDITIONAL_INCLUDE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/include")
+list(APPEND ADDITIONAL_INCLUDE_LIST "${CMAKE_SOURCE_DIR}/${API_LIB}/include")
+list(APPEND ADDITIONAL_INCLUDE_LIST "${CMAKE_SOURCE_DIR}/${COMMON_LIB}/include")
+list(APPEND ADDITIONAL_INCLUDE_LIST "${CMAKE_SOURCE_DIR}/deps/tl/")
+list(APPEND ADDITIONAL_INCLUDE_LIST "${Boost_INCLUDE_DIRS}")
 
 #
 # current target sources directories
@@ -27,7 +29,7 @@ set(PRECOMPILED_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h")
 #
 # deps
 #
-list(APPEND DEPS ${ECHO_LIB})
+list(APPEND DEPS ${API_LIB})
 list(APPEND DEPS ${COMMON_LIB})
 list(APPEND DEPS ${Boost_LIBRARIES})
 list(APPEND DEPS spdlog::spdlog)
@@ -53,11 +55,7 @@ add_executable(${THIS_TARGET_NAME} ${SOURCES_LIST} ${HEADERS_LIST})
 #
 # adding include directories to created target
 #
-include_directories(${INCLUDES_DIR})
-include_directories(${ECHO_LIB})
-include_directories(${COMMON_LIB_INCLUDE_DIR})
-include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${EXPECTED_LIB_INCLUDE_DIR})
+include_directories(${ADDITIONAL_INCLUDE_LIST})
 
 #
 # adding precompiled header
@@ -77,11 +75,11 @@ make_coverage_target(
   TARGET_NAME ${THIS_TARGET_NAME}
 )
 
-list(APPEND ECHO_LIB_TESTS_SANITIZED_DEPS ${DEPS})
-list(REMOVE_ITEM ECHO_LIB_TESTS_SANITIZED_DEPS ${ECHO_LIB})
-list(REMOVE_ITEM ECHO_LIB_TESTS_SANITIZED_DEPS ${COMMON_LIB})
-list(APPEND ECHO_LIB_TESTS_SANITIZED_DEPS ${COMMON_LIB}_sanitized)
-list(APPEND ECHO_LIB_TESTS_SANITIZED_DEPS ${ECHO_LIB}_sanitized)
+list(APPEND TESTS_SANITIZED_DEPS ${DEPS})
+list(REMOVE_ITEM TESTS_SANITIZED_DEPS ${API_LIB})
+list(REMOVE_ITEM TESTS_SANITIZED_DEPS ${COMMON_LIB})
+list(APPEND TESTS_SANITIZED_DEPS ${COMMON_LIB}_sanitized)
+list(APPEND TESTS_SANITIZED_DEPS ${API_LIB}_sanitized)
 
 #
 # creating sanitized version of this target to check UB
@@ -90,7 +88,7 @@ make_executable_sanitized_target(
   TARGET_NAME ${THIS_TARGET_NAME}_sanitized
   SOURCES ${SOURCES_LIST}
   HEADERS ${HEADERS_LIST}
-  DEPS ${ECHO_LIB_TESTS_SANITIZED_DEPS}
+  DEPS ${TESTS_SANITIZED_DEPS}
   PRECOMPILED_HEADER ${PRECOMPILED_HEADER}
 )
 
