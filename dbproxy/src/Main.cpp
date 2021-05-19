@@ -21,13 +21,15 @@ int main(int argc, char** argv) {
       return EXIT_FAILURE;
     }
 
-    if (!expected_settings->EnableConsoleLogging() && common::DisableConsoleLogging()) {
+    const auto& settings = *expected_settings;
+
+    if (!settings->EnableConsoleLogging() && common::DisableConsoleLogging()) {
       std::cerr << "Error disabling console logging error" << std::endl;
       return EXIT_FAILURE;
     }
 
-    common::Logger()->set_level(expected_settings->LogLevel());
-    api::DbProxyApplication app(*expected_settings);
+    common::Logger()->set_level(settings->LogLevel());
+    api::DbProxyApplication app(settings);
     const auto error = app.Start();
 
     if (error) {

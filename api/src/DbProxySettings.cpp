@@ -48,7 +48,7 @@ T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) 
 
 namespace api {
 
-common::Expected<DbProxySettings, std::error_code>
+common::Expected<SharedDbProxySettings, std::error_code>
 DbProxySettings::Read(
   int argc,
   char** argv,
@@ -121,7 +121,7 @@ DbProxySettings::Read(
       throw std::runtime_error{"Invalid log level argument: " + log_level};
     }
 
-    return DbProxySettings{settings};
+    return std::shared_ptr<DbProxySettings>{ new DbProxySettings{ settings } };
   } catch (const HelpMessageRequested&) {
     throw;
   } catch (const std::exception& ex) {

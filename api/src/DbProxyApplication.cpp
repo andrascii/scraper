@@ -6,14 +6,14 @@
 
 namespace api {
 
-DbProxyApplication::DbProxyApplication(DbProxySettings settings)
+DbProxyApplication::DbProxyApplication(SharedDbProxySettings settings)
   :  settings_{ std::move( settings ) } {}
 
 std::error_code DbProxyApplication::Start() noexcept {
   try {
     const auto thread_count = std::max<int>(static_cast<int>(std::thread::hardware_concurrency()), 1);
     const auto address = boost::asio::ip::make_address("0.0.0.0");
-    const auto port = uint16_t{ settings_.HttpPort() };
+    const auto port = uint16_t{ settings_->HttpPort() };
 
     auto ctx = boost::asio::io_context{thread_count};
     std::make_shared<Listener>(ctx, boost::asio::ip::tcp::endpoint{address, port})->Run();

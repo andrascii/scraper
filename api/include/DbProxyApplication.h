@@ -8,12 +8,12 @@ namespace api {
 
 class DbProxyApplication : public IApplication {
 public:
-  DbProxyApplication(DbProxySettings  settings);
+  DbProxyApplication(SharedDbProxySettings settings);
 
   std::error_code Start() noexcept;
 
 private:
-  DbProxySettings settings_;
+  SharedDbProxySettings settings_;
 };
 
 }

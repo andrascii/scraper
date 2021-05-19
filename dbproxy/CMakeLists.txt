@@ -35,12 +35,6 @@ list(APPEND DEPS libpqxx::pqxx)
 list(APPEND DEPS simdjson::simdjson)
 list(APPEND DEPS simdjson::simdjson-flags)
 list(APPEND DEPS simdjson::simdjson-headers)
-list(APPEND DEPS Qt5::Core)
-list(APPEND DEPS Qt5::CorePrivate)
-list(APPEND DEPS Qt5::Network)
-list(APPEND DEPS Qt5::NetworkPrivate)
-list(APPEND DEPS Qt5::Sql)
-list(APPEND DEPS Qt5::SqlPrivate)
 
 #
 # collecting sources and headers

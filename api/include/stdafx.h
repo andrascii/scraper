@@ -72,42 +72,9 @@
 #include <cxxopts.hpp>
 
 //
-// Qt
+// libpq
 //
-#include <QCoreApplication>
-#include <QMetaObject>
-#include <QMetaMethod>
-#include <QMetaType>
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkProxy>
-#include <QtNetwork/QAuthenticator>
-#include <QTimer>
-#include <QTcpSocket>
-#include <QTcpServer>
-#include <QMutex>
-#include <QMutexLocker>
-#include <QReadWriteLock>
-#include <QSemaphore>
-#include <QWaitCondition>
-#include <QQueue>
-#include <QDebug>
-#include <QProcess>
-#include <QDateTime>
-#include <QAbstractNetworkCache>
-#include <QStringBuilder>
-#include <QFile>
-#include <QFileInfo>
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
-#include <QBuffer>
-#include <QPointer>
-#include <QSharedMemory>
-#include <QDir>
-#include <QUrlQuery>
-#include <QJsonDocument>
-#include <QSqlDatabase>
+#include <libpq-fe.h>
 
 using namespace std::chrono_literals;
 using namespace std::string_literals;

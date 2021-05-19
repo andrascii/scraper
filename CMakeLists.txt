@@ -38,9 +38,6 @@ find_package(spdlog REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 find_package(libpqxx CONFIG REQUIRED)
 find_package(simdjson CONFIG REQUIRED)
-find_package(Qt5Core CONFIG REQUIRED)
-find_package(Qt5Network CONFIG REQUIRED)
-find_package(Qt5Sql CONFIG REQUIRED)
 
 #
 # project variables

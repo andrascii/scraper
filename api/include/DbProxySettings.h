@@ -4,9 +4,12 @@
 
 namespace api {
 
+class DbProxySettings;
+using SharedDbProxySettings = std::shared_ptr<DbProxySettings>;
+
 class DbProxySettings final {
 public:
-  static common::Expected<DbProxySettings, std::error_code> Read(
+  static common::Expected<SharedDbProxySettings, std::error_code> Read(
     int argc,
     char** argv,
     const std::string& app_name,

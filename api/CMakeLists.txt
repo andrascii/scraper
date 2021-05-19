@@ -35,23 +35,12 @@ list(APPEND DEPS libpqxx::pqxx)
 list(APPEND DEPS simdjson::simdjson)
 list(APPEND DEPS simdjson::simdjson-flags)
 list(APPEND DEPS simdjson::simdjson-headers)
-list(APPEND DEPS Qt5::Core)
-list(APPEND DEPS Qt5::CorePrivate)
-list(APPEND DEPS Qt5::Network)
-list(APPEND DEPS Qt5::NetworkPrivate)
-list(APPEND DEPS Qt5::Sql)
-list(APPEND DEPS Qt5::SqlPrivate)
 
 #
 # collecting sources and headers
 #
 aux_source_directory(${SOURCES_DIR} SOURCES_LIST)
 file(GLOB_RECURSE HEADERS_LIST "${INCLUDES_DIR}/*.h")
-
-#
-# Wrapping header files
-#
-qt5_wrap_cpp(HEADERS_MOC_FILES ${HEADERS_LIST})
 
 #
 # adding precompiled header into specific folder
@@ -61,7 +50,7 @@ source_group("Precompiled Headers" FILES ${PRECOMPILED_HEADER})
 #
 # creating target
 #
-add_library(${THIS_TARGET_NAME} STATIC ${HEADERS_LIST} ${HEADERS_MOC_FILES} ${SOURCES_LIST} include/Listener.h src/Listener.cpp include/Session.h src/Session.cpp)
+add_library(${THIS_TARGET_NAME} STATIC ${HEADERS_LIST} ${SOURCES_LIST})
 
 #
 # adding include directories to created target
