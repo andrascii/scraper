@@ -6,7 +6,7 @@ template <class Body, class Allocator>
 using RequestType = boost::beast::http::request<Body, boost::beast::http::basic_fields<Allocator>>;
 
 template <class Body, class Allocator>
-auto BadRequest(RequestType<Body, Allocator>&& request, boost::beast::string_view why) {
+auto BadRequest(RequestType<Body, Allocator>&& request, boost::beast::string_view body) {
   boost::beast::http::response<boost::beast::http::string_body> response{
     boost::beast::http::status::bad_request,
     request.version()
@@ -15,7 +15,7 @@ auto BadRequest(RequestType<Body, Allocator>&& request, boost::beast::string_vie
   response.set(boost::beast::http::field::server, BOOST_BEAST_VERSION_STRING);
   response.set(boost::beast::http::field::content_type, "text/plain");
   response.keep_alive(false);
-  response.body() = std::string{ why };
+  response.body() = std::string{ body };
   response.prepare_payload();
   return response;
 }
@@ -67,8 +67,24 @@ void Session::OnRead(boost::beast::error_code error, std::size_t bytes_transferr
     return;
   }
 
+  const auto body = R"(
+    Babel is a popular JS compiler that offers a solution to a well-known problem:
+    not all browsers support the full range of features declared in ECMAScript.
+    We're not even talking about fully implementing a specific version of ECMAScript.
+    At any given time, one browser can implement a specific selection of features from ECMAScript 2019, while
+    the other still only understands ECMAScript 5. Visit caniuse.com and search for arrow functions.
+    You will see that Internet Explorer 11, OperaMini and some other browsers do not support them.
+  )";
+
   // Send the response
-  lambda_(BadRequest(std::move(request_), "First test"));
+  lambda_(BadRequest(std::move(request_), body));
+
+  const auto header = request_.base();
+  const auto method = header.method();
+
+  if (method != boost::beast::http::verb::post) {
+    SPDLOG_TRACE("Method not POST");
+  }
 }
 
 void Session::OnWrite(bool close, boost::beast::error_code error, std::size_t bytes_transferred) {

@@ -40,7 +40,7 @@ void Listener::Run() {
 void Listener::DoAccept() {
   acceptor_.async_accept(
     boost::asio::make_strand(io_context_),
-    boost::beast::bind_front_handler(&Listener::OnAccept,shared_from_this())
+    boost::beast::bind_front_handler(&Listener::OnAccept, shared_from_this())
   );
 }
 

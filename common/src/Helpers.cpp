@@ -33,7 +33,7 @@ void SetThreadName(DWORD thread_id, const std::string& thread_name) {
 
 namespace common {
 
-void Helpers::setCurrentThreadName(const std::string& name) noexcept {
+void Helpers::SetCurrentThreadName(const std::string& name) noexcept {
 #ifdef USE_WINDOWS_SET_THREAD_NAME_HACK
   SetThreadName(static_cast<DWORD>(-1), name);
 #elif defined(__APPLE__)

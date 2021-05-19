@@ -2,6 +2,7 @@
 #include "Logger.h"
 #include "Errors.h"
 #include "Listener.h"
+#include "Helpers.h"
 
 namespace api {
 
@@ -12,7 +13,7 @@ std::error_code DbProxyApplication::Start() noexcept {
   try {
     const auto thread_count = std::max<int>(static_cast<int>(std::thread::hardware_concurrency()), 1);
     const auto address = boost::asio::ip::make_address("0.0.0.0");
-    const auto port = uint16_t{13337};
+    const auto port = uint16_t{ settings_.HttpPort() };
 
     auto ctx = boost::asio::io_context{thread_count};
     std::make_shared<Listener>(ctx, boost::asio::ip::tcp::endpoint{address, port})->Run();
@@ -21,7 +22,10 @@ std::error_code DbProxyApplication::Start() noexcept {
     threads.reserve(thread_count - 1);
 
     for (auto i = thread_count - 1; i > 0; --i) {
-      threads.emplace_back([&ctx] { ctx.run(); });
+      threads.emplace_back([&ctx, i] {
+        common::Helpers::SetCurrentThreadName("listener #" + std::to_string(i));
+        ctx.run();
+      });
     }
 
     ctx.run();

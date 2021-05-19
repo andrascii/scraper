@@ -12,7 +12,7 @@ using Unexpected = tl::unexpected<Error>;
 
 class Helpers final {
  public:
-  static void setCurrentThreadName(const std::string& name) noexcept;
+  static void SetCurrentThreadName(const std::string& name) noexcept;
 };
 
 }
