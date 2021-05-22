@@ -16,21 +16,49 @@ include(msvc_options)
 
 message(STATUS "CMAKE_CXX_COMPILER_ID: ${CMAKE_CXX_COMPILER_ID}")
 
-set(VERSION_MAJOR 0 CACHE STRING "Major version #" FORCE)
-set(VERSION_MINOR 1 CACHE STRING "Minor version #" FORCE)
+set(VERSION_MAJOR 1 CACHE STRING "Major version #" FORCE)
+set(VERSION_MINOR 0 CACHE STRING "Minor version #" FORCE)
 set(VERSION_PATCH 0 CACHE STRING "Patch version #" FORCE)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(CMAKE_VERSION VERSION_LESS "3.7.0")
+if (CMAKE_VERSION VERSION_LESS "3.7.0")
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
 endif()
 
 #
 # deps packages
 #
+include(FindPackageHandleStandardArgs)
+include(SelectLibraryConfigurations)
+
+find_path(
+  CPPKAFKA_INCLUDES
+  NAMES cppkafka.h
+  HINTS ${CURRENT_INSTALLED_DIR}
+  PATH_SUFFIXES cppkafka
+)
+
+find_library(
+  CPPKAFKA_LIBRARY_DEBUG
+  NAMES cppkafka
+  PATH_SUFFIXES lib
+  PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+  NO_DEFAULT_PATH REQUIRED
+)
+
+find_library(
+  CPPKAFKA_LIBRARY_RELEASE
+  NAMES cppkafka
+  PATH_SUFFIXES lib
+  PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug"
+  NO_DEFAULT_PATH REQUIRED
+)
+
+select_library_configurations(CPPKAFKA)
+
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS thread program_options REQUIRED)
 find_package(GTest REQUIRED)
@@ -38,6 +66,7 @@ find_package(spdlog REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 find_package(libpqxx CONFIG REQUIRED)
 find_package(simdjson CONFIG REQUIRED)
+find_package(RdKafka CONFIG REQUIRED)
 
 #
 # project variables

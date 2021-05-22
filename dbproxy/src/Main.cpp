@@ -1,6 +1,7 @@
 #include "DbProxyApplication.h"
-#include "DbProxySettings.h"
+#include "Settings.h"
 #include "Exceptions.h"
+#include "KafkaPublisher.h"
 
 int main(int argc, char** argv) {
   try {
@@ -9,7 +10,7 @@ int main(int argc, char** argv) {
       return EXIT_FAILURE;
     }
 
-    const auto expected_settings = api::DbProxySettings::Read(
+    const auto expected_settings = api::Settings::Read(
       argc,
       argv,
       "DbProxy",
@@ -29,7 +30,7 @@ int main(int argc, char** argv) {
     }
 
     common::Logger()->set_level(settings->LogLevel());
-    api::DbProxyApplication app(settings);
+    api::DbProxyApplication app{settings, std::make_unique<api::KafkaPublisher>(settings)};
     const auto error = app.Start();
 
     if (error) {

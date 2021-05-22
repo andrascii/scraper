@@ -1,10 +1,19 @@
-#include "DbProxySettings.h"
+#include "Settings.h"
 #include "Errors.h"
 #include "Exceptions.h"
 
 namespace {
 
-constexpr auto kDbOption{ "d,Database" };
+constexpr auto kBrokerListOption{ "b,brokers" };
+constexpr auto kBrokerListOptionDescription{ "The Kafka server address" };
+
+constexpr auto kKafkaInputTopicOption{ "i,kafka-input-topic" };
+constexpr auto kKafkaInputTopicOptionDescription{ "The PostgreSQL Database name" };
+
+constexpr auto kKafkaOutputTopicOption{ "o,kafka-output-topic" };
+constexpr auto kKafkaOutputTopicOptionDescription{ "The PostgreSQL Database name" };
+
+constexpr auto kDbOption{ "d,database" };
 constexpr auto kDbOptionDescription{ "The PostgreSQL Database name" };
 
 constexpr auto kDbUserOption{ "u,dbuser" };
@@ -48,8 +57,8 @@ T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) 
 
 namespace api {
 
-common::Expected<SharedDbProxySettings, std::error_code>
-DbProxySettings::Read(
+common::Expected<SharedSettings, std::error_code>
+Settings::Read(
   int argc,
   char** argv,
   const std::string& app_name,
@@ -59,6 +68,9 @@ DbProxySettings::Read(
     cxxopts::Options options{app_name, app_description};
 
     options.add_options()
+      (kBrokerListOption, kBrokerListOptionDescription, cxxopts::value<std::string>()->default_value("localhost:9092"))
+      (kKafkaInputTopicOption, kKafkaInputTopicOptionDescription, cxxopts::value<std::string>()->default_value("crawl-page-result"))
+      (kKafkaOutputTopicOption, kKafkaOutputTopicOptionDescription, cxxopts::value<std::string>()->default_value("crawl-queue"))
       (kDbOption, kDbOptionDescription, cxxopts::value<std::string>()->default_value("scraper"))
       (kDbUserOption, kDbUserOptionDescription, cxxopts::value<std::string>()->default_value("postgres"))
       (kDbUserPasswordOption, kDbUserPasswordOptionDescription, cxxopts::value<std::string>()->default_value("postgres"))
@@ -94,34 +106,37 @@ DbProxySettings::Read(
       return false;
     };
 
-    Settings settings{};
-    settings.database = GetOptionValue<std::string>(result, kDbOption);
-    settings.database_user = GetOptionValue<std::string>(result, kDbUserOption);
-    settings.database_password = GetOptionValue<std::string>(result, kDbUserPasswordOption);
-    settings.database_host = GetOptionValue<std::string>(result, kDbHostOption);
-    settings.database_port = GetOptionValue<uint16_t>(result, kDbPortOption);
-    settings.http_port = GetOptionValue<uint16_t>(result, kHttpPortOption);
-    settings.enable_console_logging = has_option(kEnableConsoleOption);
+    Data data{};
+    data.kafka_broker_list = GetOptionValue<std::string>(result, kBrokerListOption);
+    data.kafka_input_topic = GetOptionValue<std::string>(result, kKafkaInputTopicOption);
+    data.kafka_output_topic = GetOptionValue<std::string>(result, kKafkaOutputTopicOption);
+    data.database = GetOptionValue<std::string>(result, kDbOption);
+    data.database_user = GetOptionValue<std::string>(result, kDbUserOption);
+    data.database_password = GetOptionValue<std::string>(result, kDbUserPasswordOption);
+    data.database_host = GetOptionValue<std::string>(result, kDbHostOption);
+    data.database_port = GetOptionValue<uint16_t>(result, kDbPortOption);
+    data.http_port = GetOptionValue<uint16_t>(result, kHttpPortOption);
+    data.enable_console_logging = has_option(kEnableConsoleOption);
 
     auto log_level = GetOptionValue<std::string>(result, kLogLevelOption);
 
     if (boost::iequals("trace", log_level)) {
-      settings.log_level = spdlog::level::trace;
+      data.log_level = spdlog::level::trace;
     } else if (boost::iequals("debug", log_level)) {
-      settings.log_level = spdlog::level::debug;
+      data.log_level = spdlog::level::debug;
     } else if (boost::iequals("info", log_level)) {
-      settings.log_level = spdlog::level::info;
+      data.log_level = spdlog::level::info;
     } else if (boost::iequals("warning", log_level)) {
-      settings.log_level = spdlog::level::warn;
+      data.log_level = spdlog::level::warn;
     } else if (boost::iequals("error", log_level)) {
-      settings.log_level = spdlog::level::err;
+      data.log_level = spdlog::level::err;
     } else if (boost::iequals("critical", log_level)) {
-      settings.log_level = spdlog::level::critical;
+      data.log_level = spdlog::level::critical;
     } else {
       throw std::runtime_error{"Invalid log level argument: " + log_level};
     }
 
-    return std::shared_ptr<DbProxySettings>{ new DbProxySettings{ settings } };
+    return std::shared_ptr<Settings>{ new Settings{data } };
   } catch (const HelpMessageRequested&) {
     throw;
   } catch (const std::exception& ex) {
@@ -130,39 +145,51 @@ DbProxySettings::Read(
   }
 }
 
-std::string DbProxySettings::Database() const noexcept {
-  return settings_.database;
+std::string Settings::KafkaBrokerList() const noexcept {
+  return data_.kafka_broker_list;
 }
 
-std::string DbProxySettings::DatabaseUser() const noexcept {
-  return settings_.database_user;
+std::string Settings::KafkaInputTopic() const noexcept {
+  return data_.kafka_input_topic;
 }
 
-std::string DbProxySettings::DatabasePassword() const noexcept {
-  return settings_.database_password;
+std::string Settings::KafkaOutputTopic() const noexcept {
+  return data_.kafka_output_topic;
 }
 
-std::string DbProxySettings::DatabaseHost() const noexcept {
-  return settings_.database_host;
+std::string Settings::Database() const noexcept {
+  return data_.database;
 }
 
-uint16_t DbProxySettings::DatabasePort() const noexcept {
-  return settings_.database_port;
+std::string Settings::DatabaseUser() const noexcept {
+  return data_.database_user;
 }
 
-uint16_t DbProxySettings::HttpPort() const noexcept {
-  return settings_.http_port;
+std::string Settings::DatabasePassword() const noexcept {
+  return data_.database_password;
 }
 
-spdlog::level::level_enum DbProxySettings::LogLevel() const noexcept {
-  return settings_.log_level;
+std::string Settings::DatabaseHost() const noexcept {
+  return data_.database_host;
 }
 
-bool DbProxySettings::EnableConsoleLogging() const noexcept {
-  return settings_.enable_console_logging;
+uint16_t Settings::DatabasePort() const noexcept {
+  return data_.database_port;
 }
 
-DbProxySettings::DbProxySettings(Settings settings)
-  : settings_{ std::move( settings ) } {}
+uint16_t Settings::HttpPort() const noexcept {
+  return data_.http_port;
+}
+
+spdlog::level::level_enum Settings::LogLevel() const noexcept {
+  return data_.log_level;
+}
+
+bool Settings::EnableConsoleLogging() const noexcept {
+  return data_.enable_console_logging;
+}
+
+Settings::Settings(Data data)
+  : data_{ std::move(data) } {}
 
 }

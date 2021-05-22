@@ -2,18 +2,20 @@
 
 #include "IApplication.h"
 #include "Helpers.h"
-#include "DbProxySettings.h"
+#include "Settings.h"
+#include "IMessagePublisher.h"
 
 namespace api {
 
 class DbProxyApplication : public IApplication {
 public:
-  DbProxyApplication(SharedDbProxySettings settings);
+  DbProxyApplication(SharedSettings settings, std::unique_ptr<IMessagePublisher> publisher);
 
   std::error_code Start() noexcept;
 
 private:
-  SharedDbProxySettings settings_;
+  SharedSettings settings_;
+  std::unique_ptr<IMessagePublisher> publisher_;
 };
 
 }

@@ -1,13 +1,16 @@
 #include "DbProxyApplication.h"
 #include "Logger.h"
-#include "Errors.h"
 #include "Listener.h"
 #include "Helpers.h"
+#include "KafkaPublisher.h"
 
 namespace api {
 
-DbProxyApplication::DbProxyApplication(SharedDbProxySettings settings)
-  :  settings_{ std::move( settings ) } {}
+DbProxyApplication::DbProxyApplication(
+  SharedSettings settings,
+  std::unique_ptr<IMessagePublisher> publisher)
+  : settings_{std::move(settings)},
+    publisher_{std::move(publisher)} {}
 
 std::error_code DbProxyApplication::Start() noexcept {
   try {

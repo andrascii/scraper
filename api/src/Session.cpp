@@ -25,8 +25,8 @@ auto BadRequest(RequestType<Body, Allocator>&& request, boost::beast::string_vie
 namespace api {
 
 Session::Session(boost::asio::ip::tcp::socket&& socket)
-  : stream_{ std::move(socket) },
-    lambda_{ *this } {}
+  : stream_{std::move(socket)},
+    lambda_{*this} {}
 
 void Session::Run() {
   // We need to be executing within a strand to perform async operations
@@ -82,6 +82,8 @@ void Session::OnRead(boost::beast::error_code error, std::size_t bytes_transferr
   const auto header = request_.base();
   const auto method = header.method();
 
+  std::cout << header.target();
+
   if (method != boost::beast::http::verb::post) {
     SPDLOG_TRACE("Method not POST");
   }
@@ -97,21 +99,21 @@ void Session::OnWrite(bool close, boost::beast::error_code error, std::size_t by
 
   if (close) {
     // This means we should close the connection, usually because
-    // the response indicated the "Connection: close" semantic.
+    // the response indicated the "Descriptor: close" semantic.
     return DoClose();
   }
 
   SPDLOG_TRACE("Response successfully sent");
 
   // We're done with the response so delete it
-  res_ = nullptr;
+  response_ = nullptr;
 
   // Read another request
   DoRead();
 }
 
 void Session::DoClose() {
-  SPDLOG_TRACE("Connection closed");
+  SPDLOG_TRACE("Descriptor closed");
 
   // Send a TCP shutdown
   boost::beast::error_code error;

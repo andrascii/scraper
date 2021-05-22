@@ -4,17 +4,24 @@
 
 namespace api {
 
-class DbProxySettings;
-using SharedDbProxySettings = std::shared_ptr<DbProxySettings>;
+class Settings;
+using SharedSettings = std::shared_ptr<Settings>;
 
-class DbProxySettings final {
+class Settings final {
 public:
-  static common::Expected<SharedDbProxySettings, std::error_code> Read(
+  static common::Expected<SharedSettings, std::error_code> Read(
     int argc,
     char** argv,
     const std::string& app_name,
     const std::string& app_description
   );
+
+  //
+  // Kafka settings
+  //
+  [[nodiscard]] std::string KafkaBrokerList() const noexcept;
+  [[nodiscard]] std::string KafkaInputTopic() const noexcept;
+  [[nodiscard]] std::string KafkaOutputTopic() const noexcept;
 
   //
   // DB settings
@@ -37,7 +44,10 @@ public:
   [[nodiscard]] bool EnableConsoleLogging() const noexcept;
 
 private:
-  struct Settings {
+  struct Data {
+    std::string kafka_broker_list;
+    std::string kafka_input_topic;
+    std::string kafka_output_topic;
     std::string database;
     std::string database_user;
     std::string database_password;
@@ -48,10 +58,10 @@ private:
     spdlog::level::level_enum log_level{ spdlog::level::info };
   };
 
-  explicit DbProxySettings(Settings settings);
+  explicit Settings(Data data);
 
 private:
-  Settings settings_;
+  Data data_;
 };
 
 }

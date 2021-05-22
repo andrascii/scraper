@@ -29,12 +29,15 @@ list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${Boost_INCLUDE_DIRS}")
 list(APPEND DEPS ${API_LIB})
 list(APPEND DEPS ${COMMON_LIB})
 list(APPEND DEPS ${Boost_LIBRARIES})
+list(APPEND DEPS ${CPPKAFKA_LIBRARY})
 list(APPEND DEPS spdlog::spdlog)
 list(APPEND DEPS cxxopts::cxxopts)
 list(APPEND DEPS libpqxx::pqxx)
 list(APPEND DEPS simdjson::simdjson)
 list(APPEND DEPS simdjson::simdjson-flags)
 list(APPEND DEPS simdjson::simdjson-headers)
+list(APPEND DEPS RdKafka::rdkafka)
+list(APPEND DEPS RdKafka::rdkafka++)
 
 #
 # collecting sources and headers

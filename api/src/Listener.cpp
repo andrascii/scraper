@@ -5,8 +5,8 @@
 namespace api {
 
 Listener::Listener(boost::asio::io_context& io_context, boost::asio::ip::tcp::endpoint endpoint)
-  : io_context_{ io_context },
-    acceptor_{ boost::asio::make_strand(io_context_) } {
+  : io_context_{io_context},
+    acceptor_{boost::asio::make_strand(io_context_)} {
   boost::beast::error_code error;
   acceptor_.open(endpoint.protocol(), error);
 

@@ -32,7 +32,7 @@ private:
 
       // Store a type-erased version of the shared
       // pointer in the class to keep it alive.
-      self_.res_ = sp;
+      self_.response_ = sp;
 
       // Write the response
       async_write(
@@ -47,7 +47,7 @@ private:
   boost::beast::tcp_stream stream_;
   boost::beast::flat_buffer buffer_;
   boost::beast::http::request<boost::beast::http::string_body> request_;
-  std::shared_ptr<void> res_;
+  std::shared_ptr<void> response_;
   SendLambda lambda_;
 };
 
