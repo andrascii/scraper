@@ -8,12 +8,12 @@
 namespace api {
 
 class DbProxyApplication : public IApplication {
-public:
+ public:
   DbProxyApplication(SharedSettings settings, std::unique_ptr<IMessagePublisher> publisher);
 
   std::error_code Start() noexcept;
 
-private:
+ private:
   SharedSettings settings_;
   std::unique_ptr<IMessagePublisher> publisher_;
 };

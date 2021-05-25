@@ -3,7 +3,7 @@
 namespace api {
 
 class IApplication {
-public:
+ public:
   virtual ~IApplication() = default;
 };
 

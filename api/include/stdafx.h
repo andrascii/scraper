@@ -77,9 +77,19 @@
 #include <libpq-fe.h>
 
 //
+// pqxx
+//
+#include <pqxx/pqxx>
+
+//
 // CppKafka
 //
 #include <cppkafka/cppkafka.h>
+
+//
+// fmt
+//
+#include <fmt/format.h>
 
 using namespace std::chrono_literals;
 using namespace std::string_literals;

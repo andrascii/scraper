@@ -14,21 +14,32 @@ enum class DatabaseColumnType {
 
 struct NullType {} Null;
 
-using DefaultValueType = std::variant<bool, NullType, std::string, QString, int64_t, uint64_t, double>;
+using DefaultValueType = std::variant<
+  bool,
+  NullType,
+  std::string,
+  int64_t,
+  uint64_t,
+  double
+>;
+
+struct UniqueKey {
+  std::vector<std::string> columns;
+};
 
 struct ForeignKey {
-  QStringList columns;
-  QString foreign_table;
-  QStringList foreign_columns;
+  std::vector<std::string> columns;
+  std::string foreign_table;
+  std::vector<std::string> foreign_columns;
 };
 
 struct Reference {
-  QString table_name;
-  QString column_name;
+  std::string table_name;
+  std::string column_name;
 };
 
 struct ColumnDefinition {
-  QString name;
+  std::string name;
   DatabaseColumnType column_type;
   DefaultValueType default_value;
   std::optional<Reference> reference;

@@ -8,7 +8,7 @@ class Settings;
 using SharedSettings = std::shared_ptr<Settings>;
 
 class Settings final {
-public:
+ public:
   static common::Expected<SharedSettings, std::error_code> Read(
     int argc,
     char** argv,
@@ -43,7 +43,7 @@ public:
   [[nodiscard]] spdlog::level::level_enum LogLevel() const noexcept;
   [[nodiscard]] bool EnableConsoleLogging() const noexcept;
 
-private:
+ private:
   struct Data {
     std::string kafka_broker_list;
     std::string kafka_input_topic;
@@ -60,7 +60,7 @@ private:
 
   explicit Settings(Data data);
 
-private:
+ private:
   Data data_;
 };
 

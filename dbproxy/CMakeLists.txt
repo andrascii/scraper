@@ -32,12 +32,16 @@ list(APPEND DEPS ${Boost_LIBRARIES})
 list(APPEND DEPS ${CPPKAFKA_LIBRARY})
 list(APPEND DEPS spdlog::spdlog)
 list(APPEND DEPS cxxopts::cxxopts)
+list(APPEND DEPS PostgreSQL::PostgreSQL)
 list(APPEND DEPS libpqxx::pqxx)
 list(APPEND DEPS simdjson::simdjson)
 list(APPEND DEPS simdjson::simdjson-flags)
 list(APPEND DEPS simdjson::simdjson-headers)
 list(APPEND DEPS RdKafka::rdkafka)
 list(APPEND DEPS RdKafka::rdkafka++)
+list(APPEND DEPS OpenSSL::SSL)
+list(APPEND DEPS OpenSSL::Crypto)
+list(APPEND DEPS fmt::fmt)
 
 #
 # collecting sources and headers

@@ -18,59 +18,89 @@ constexpr char* ToString(DatabaseColumnType type) noexcept {
   abort();
 }
 
-constexpr QString DefaultValueToPostgreSqlString(const DefaultValueType& value) {
+constexpr std::string DefaultValueToPostgreSqlString(const DefaultValueType& value) {
   common::VariantVisitor visitor{
     [](bool value) { return value ? "true" : "false"; },
     [](NullType) { return "null"; },
-    [](int64_t value) { return QString::number(value); }
-    [](uint64_t value) { return QString::number(value); },
-    [](double value) { return QString::number(value); },
-    [](const std::string& value) { return QString::fromStdString(value); },
-    [](const QString& value) { return value; }
+    [](int64_t value) { return std::to_string(value); }
+    [](uint64_t value) { return std::to_string(value); },
+    [](double value) { return std::to_string(value); },
+    [](const std::string& value) { return value; }
   };
 
   return std::visit(visitor, value);
 }
 
-inline QString ColumnToPostgreSqlString(const ColumnDefinition& column, const QString& prefix = "") {
-  QStringList lst;
+inline std::string ColumnToPostgreSqlString(const ColumnDefinition& column, const std::string& prefix = "") {
+  std::vector<std::string> lst;
 
-  lst
-    << prefix
-    << column.name
-    << column.auto_increment ? "BIGSERIAL" : ToString(column.column_type)
-    << column.not_null ? "NUT NULL" : ""
-    << column.primary_key ? "PRIMARY KEY" : column.unique ? "UNIQUE" : ""
-    << column.default_value.index() != std::variant_npos ? "DEFAULT " % DefaultValueToPostgreSqlString(column.default_value) : ""
-    << column.reference.has_value() ? "REFERENCES " % column.reference->table_name % "(" % column.reference->column_name % ")" : "";
+  lst.push_back(prefix);
+  lst.push_back(column.name);
 
-  return lst.join(" ");
+  if (column.auto_increment) {
+    lst.emplace_back("BIGSERIAL");
+  } else {
+    lst.emplace_back(ToString(column.column_type));
+  }
+
+  if (column.not_null) {
+    lst.emplace_back("NOT NULL");
+  } else {
+    lst.emplace_back();
+  }
+
+  if (column.primary_key) {
+    lst.emplace_back("PRIMARY KEY");
+  } else if (column.unique) {
+    lst.emplace_back("UNIQUE");
+  } else {
+    lst.emplace_back();
+  };
+
+  if (column.default_value.index() != std::variant_npos) {
+    lst.push_back("DEFAULT " + DefaultValueToPostgreSqlString(column.default_value));
+  } else {
+    lst.emplace_back();
+  }
+
+  if (column.reference.has_value()) {
+    lst.push_back("REFERENCES " + column.reference->table_name + "(" + column.reference->column_name + ")");
+  } else {
+    lst.emplace_back();
+  }
+
+  return boost::algorithm::join(lst, " ");
 }
 
-inline QString DropColumnString(const QString& column_name) {
-  return "DROP COLUMN " % column_name;
+inline std::string DropColumnString(const std::string& column_name) {
+  return "DROP COLUMN " + column_name;
 }
 
-inline QString ForeignKeyToPostgreSqlString(const ForeignKey& foreign_key, const QString& prefix = "") {
-  return prefix % "CONSTRAINT fk_" % foreign_key.columns.join("_") % " " %
-    "FOREIGN KEY(" % foreign_key.columns.join(", ") % ") " %
-    "REFERENCES " % foreign_key.foreign_table % "(" % foreign_key.foreign_columns.join(",") % ")";
+inline std::string ForeignKeyToPostgreSqlString(const ForeignKey& foreign_key, const std::string& prefix = "") {
+  return
+    prefix + "CONSTRAINT fk_" + boost::algorithm::join(foreign_key.columns, "_") + " " +
+    "FOREIGN KEY(" + boost::algorithm::join(foreign_key.columns, ", ") + ") " +
+    "REFERENCES " + foreign_key.foreign_table + "(" + boost::algorithm::join(foreign_key.foreign_columns, ",") + ")";
 }
 
-inline QString UniqueKeyConstraintName(const QStringList& columns) {
-  return "unique_" % columns.join("_");
+inline std::string UniqueKeyConstraintName(const UniqueKey& unique_key) {
+  return "unique_" + boost::algorithm::join(unique_key.columns, "_");
 }
 
-inline QString AddUniqueKeyToPostgreSqlStringCreateTable(const QStringList& unique_key_columns) {
-  return "CONSTRAINT " % UniqueKeyConstraintName(unique_key_columns) % " UNIQUE(" % unique_key_columns.join(", ") % ")";
+inline std::string AddUniqueKeyToPostgreSqlStringCreateTable(const UniqueKey& unique_key) {
+  return
+    "CONSTRAINT " +
+    UniqueKeyConstraintName(unique_key) +
+    " UNIQUE(" + boost::algorithm::join(unique_key.columns, ", ") +
+    ")";
 }
 
-inline QString AddUniqueKeyToPostgreSqlString(const QStringList& unique_key_columns) {
-  return "ADD " % AddUniqueKeyToPostgreSqlStringCreateTable(unique_key_columns);
+inline std::string AddUniqueKeyToPostgreSqlString(const UniqueKey& unique_key) {
+  return "ADD " + AddUniqueKeyToPostgreSqlStringCreateTable(unique_key);
 }
 
-inline QString DropUniqueKeyToPostgreSqlString(const QStringList& unique_key_columns) {
-  return "DROP CONSTRAINT " % UniqueKeyConstraintName(unique_key_columns);
+inline std::string DropUniqueKeyToPostgreSqlString(const UniqueKey& unique_key) {
+  return "DROP CONSTRAINT " + UniqueKeyConstraintName(unique_key);
 }
 
 }

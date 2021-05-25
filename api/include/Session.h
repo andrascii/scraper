@@ -3,19 +3,19 @@
 namespace api {
 
 class Session : public std::enable_shared_from_this<Session> {
-public:
+ public:
   explicit Session(boost::asio::ip::tcp::socket&& socket);
 
   void Run();
 
-private:
+ private:
   void DoRead();
   void OnRead(boost::beast::error_code error, std::size_t bytes_transferred);
 
   void OnWrite(bool close, boost::beast::error_code error, std::size_t bytes_transferred);
   void DoClose();
 
-private:
+ private:
   // This is the C++11 equivalent of a generic lambda.
   // The function object is used to send an HTTP message.
   struct SendLambda {

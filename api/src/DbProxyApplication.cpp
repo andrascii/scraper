@@ -1,5 +1,4 @@
 #include "DbProxyApplication.h"
-#include "Logger.h"
 #include "Listener.h"
 #include "Helpers.h"
 #include "KafkaPublisher.h"
@@ -10,7 +9,19 @@ DbProxyApplication::DbProxyApplication(
   SharedSettings settings,
   std::unique_ptr<IMessagePublisher> publisher)
   : settings_{std::move(settings)},
-    publisher_{std::move(publisher)} {}
+    publisher_{std::move(publisher)} {
+  std::stringstream connection_string;
+
+  connection_string
+    << "postgresql://"
+    << settings_->DatabaseUser() << ":"
+    << settings_->DatabasePassword() << "@"
+    << settings_->DatabaseHost() << ":"
+    << settings_->DatabasePort() << "/"
+    << settings_->Database();
+
+  pqxx::connection c{ connection_string.str() };
+}
 
 std::error_code DbProxyApplication::Start() noexcept {
   try {

@@ -6,31 +6,38 @@
 namespace api {
 
 class PgConnectionPool final : public std::enable_shared_from_this<PgConnectionPool> {
-public:
+ public:
   class ConnectionWrapper final {
-  public:
+   public:
     using Cleaner = std::function<void(const SharedPgConnection&)>;
 
-    ConnectionWrapper(const SharedPgConnection& connection, Cleaner cleaner);
+    ConnectionWrapper(SharedPgConnection connection, Cleaner cleaner);
+    ConnectionWrapper(ConnectionWrapper&& other) = default;
+    ConnectionWrapper(const ConnectionWrapper& other) = delete;
     ConnectionWrapper& operator=(ConnectionWrapper&& other) = delete;
     ConnectionWrapper& operator=(const ConnectionWrapper& other) = delete;
     ~ConnectionWrapper();
 
-    const SharedPgConnection& Connection() const noexcept;
+    [[nodiscard]] const SharedPgConnection& Connection() const noexcept;
 
-  private:
+   private:
     Cleaner cleaner_;
     SharedPgConnection connection_;
   };
 
-  PgConnectionPool(const SharedSettings& settings, size_t connection_count);
+  PgConnectionPool(SharedSettings settings, size_t connection_count);
+  PgConnectionPool(PgConnectionPool&& other) = delete;
+  PgConnectionPool(const PgConnectionPool& other) = delete;
+  PgConnectionPool& operator=(PgConnectionPool&& other) = delete;
+  PgConnectionPool& operator=(const PgConnectionPool& other) = delete;
+  ~PgConnectionPool() = default;
 
   ConnectionWrapper Take() noexcept;
 
-private:
+ private:
   void Free(const SharedPgConnection& to_free) noexcept;
 
-private:
+ private:
   struct Descriptor {
     SharedPgConnection connection;
     bool is_acquired = false;

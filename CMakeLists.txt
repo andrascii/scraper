@@ -63,10 +63,13 @@ set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS thread program_options REQUIRED)
 find_package(GTest REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(PostgreSQL REQUIRED)
 find_package(cxxopts CONFIG REQUIRED)
 find_package(libpqxx CONFIG REQUIRED)
 find_package(simdjson CONFIG REQUIRED)
 find_package(RdKafka CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 #
 # project variables

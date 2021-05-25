@@ -3,9 +3,9 @@
 
 namespace api {
 
-PgConnectionPool::ConnectionWrapper::ConnectionWrapper(const SharedPgConnection& connection, Cleaner cleaner)
-  : cleaner_{cleaner},
-    connection_{connection} {}
+PgConnectionPool::ConnectionWrapper::ConnectionWrapper(SharedPgConnection connection, Cleaner cleaner)
+  : cleaner_{std::move(cleaner)},
+    connection_{std::move(connection)} {}
 
 PgConnectionPool::ConnectionWrapper::~ConnectionWrapper() {
   cleaner_(connection_);
@@ -16,10 +16,12 @@ const SharedPgConnection& PgConnectionPool::ConnectionWrapper::Connection() cons
 }
 
 
-PgConnectionPool::PgConnectionPool(const SharedSettings& settings, size_t connection_count)
-  : settings_{settings} {
+PgConnectionPool::PgConnectionPool(SharedSettings settings, size_t connection_count)
+  : settings_{std::move(settings)} {
   for (auto i{ 0u }; i < connection_count; ++i) {
-    pool_.push_back(Descriptor{ PgConnectionFactory::Create(settings_) });
+    pool_.push_back(Descriptor{
+      .connection = PgConnectionFactory::Create(settings_)
+    });
   }
 }
 
@@ -62,8 +64,10 @@ void PgConnectionPool::Free(const SharedPgConnection& to_free) noexcept {
 
   // if someone occasionally broke the taken connection
   // then we recreate it in the pool to ensure poll contains "connection_count" connections
-  if (PQstatus(iterator->connection.get()) != ConnStatusType::CONNECTION_OK) {
-    *iterator = Descriptor{ PgConnectionFactory::Create(settings_) };
+  if (!iterator->connection->is_open()) {
+    *iterator = Descriptor{
+      .connection = PgConnectionFactory::Create(settings_)
+    };
   } else {
     iterator->is_acquired = false;
   }

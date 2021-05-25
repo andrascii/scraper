@@ -4,10 +4,10 @@
 
 namespace api {
 
-using SharedPgConnection = std::shared_ptr<PGconn>;
+using SharedPgConnection = std::shared_ptr<pqxx::connection>;
 
 class PgConnectionFactory final {
-public:
+ public:
   static SharedPgConnection Create(const SharedSettings& settings);
 };
 

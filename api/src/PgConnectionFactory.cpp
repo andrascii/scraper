@@ -3,23 +3,17 @@
 namespace api {
 
 SharedPgConnection PgConnectionFactory::Create(const SharedSettings& settings) {
-  std::shared_ptr<PGconn> connection;
+  std::stringstream connection_string;
 
-  connection.reset(PQsetdbLogin(
-    settings->DatabaseHost().data(),
-    std::to_string(settings->DatabasePort()).data(),
-    nullptr,
-    nullptr,
-    settings->Database().data(),
-    settings->DatabaseUser().data(),
-    settings->DatabasePassword().data()
-  ), &PQfinish);
+  connection_string
+    << "postgresql://"
+    << settings->DatabaseUser() << ":"
+    << settings->DatabasePassword() << "@"
+    << settings->DatabaseHost() << ":"
+    << settings->DatabasePort() << "/"
+    << settings->Database();
 
-  if (PQstatus(connection.get()) != ConnStatusType::CONNECTION_OK && PQsetnonblocking(connection.get(), 1) != 0) {
-    throw std::runtime_error( PQerrorMessage( connection.get() ) );
-  }
-
-  return connection;
+  return std::make_shared<pqxx::connection>(connection_string.str());
 }
 
 }

@@ -3,6 +3,12 @@
 #include "Exceptions.h"
 #include "KafkaPublisher.h"
 
+struct Data {
+  int x;
+  int y;
+  int z;
+};
+
 int main(int argc, char** argv) {
   try {
     if (common::EnableConsoleLogging()) {

@@ -5,15 +5,16 @@
 namespace api {
 
 class IDbMigration {
-public:
+ public:
   virtual ~IDbMigration() = default;
-  virtual void executeIfNeeded() const = 0;
+  virtual void ExecuteIfNeeded() const = 0;
 
-private:
+ protected:
   //
   // Override it in your own implementation
   //
-  virtual void execute() const = 0;
+  virtual void Execute() const = 0;
+  [[nodiscard]] virtual bool IsAlreadyApplied(const std::string& migration_id) const = 0;
 };
 
 }
