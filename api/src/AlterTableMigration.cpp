@@ -61,6 +61,10 @@ std::string AlterTableMigration::BuildSqlQuery() const {
   sql_operations.push_back(boost::algorithm::join(drop_unique_keys_sql_operations, ",\n"));
   sql_operations.push_back(boost::algorithm::join(add_unique_keys_sql_operations, ",\n"));
 
+  sql_operations.erase(std::remove_if(begin(sql_operations), end(sql_operations), [](const std::string& str) {
+    return str.empty();
+  }), end(sql_operations));
+
   return fmt::format("ALTER TABLE {:s} {:s}", params_.table_name, boost::algorithm::join(sql_operations, ','));
 }
 
