@@ -4,28 +4,40 @@
 
 namespace api {
 
-constexpr char* ToString(DatabaseColumnType type) noexcept {
+constexpr const char* ToString(DatabaseColumnType type) noexcept {
   switch (type) {
-    case kInt: return "INTEGER";
-    case kBigInt: return "BIGINT";
-    case kText: return "TEXT";
-    case kBlob: return "BYTEA";
-    case kBoolean: return "boolean";
-    case kTimestamp: return "timestamp without time zone";
-    case kVarchar256: return "character varying(256)";
+    case DatabaseColumnType::kInt: return "INTEGER";
+    case DatabaseColumnType::kBigInt: return "BIGINT";
+    case DatabaseColumnType::kText: return "TEXT";
+    case DatabaseColumnType::kBlob: return "BYTEA";
+    case DatabaseColumnType::kBoolean: return "boolean";
+    case DatabaseColumnType::kTimestamp: return "timestamp without time zone";
+    case DatabaseColumnType::kVarChar256: return "character varying(256)";
   }
 
   abort();
 }
 
-constexpr std::string DefaultValueToPostgreSqlString(const DefaultValueType& value) {
+constexpr const char* ToString(LinkType type) noexcept {
+  switch (type) {
+    case LinkType::kCommon: return "common";
+    case LinkType::kSiteMap: return "sitemap";
+    case LinkType::kEntryPoint: return "entry_point";
+    case LinkType::kPagination: return "pagination";
+  }
+
+  abort();
+}
+
+inline std::string DefaultValueToPostgreSqlString(const DefaultValueType& value) {
   common::VariantVisitor visitor{
-    [](bool value) { return value ? "true" : "false"; },
-    [](NullType) { return "null"; },
-    [](int64_t value) { return std::to_string(value); }
+    [](bool value) { return value ? "true"s : "false"s; },
+    [](NullType) { return "null"s; },
+    [](const std::string& value) { return value; },
+    [](int64_t value) { return std::to_string(value); },
     [](uint64_t value) { return std::to_string(value); },
     [](double value) { return std::to_string(value); },
-    [](const std::string& value) { return value; }
+    [](LinkType value) { return std::string{ToString(value)}; }
   };
 
   return std::visit(visitor, value);

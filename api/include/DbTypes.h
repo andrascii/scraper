@@ -9,10 +9,18 @@ enum class DatabaseColumnType {
   kBlob,
   kBoolean,
   kTimestamp,
-  kVarchar256,
+  kVarChar256,
 };
 
-struct NullType {} Null;
+enum class LinkType {
+  kCommon,
+  kSiteMap,
+  kEntryPoint,
+  kPagination,
+};
+
+struct NullType {};
+inline NullType Null;
 
 using DefaultValueType = std::variant<
   bool,
@@ -20,7 +28,8 @@ using DefaultValueType = std::variant<
   std::string,
   int64_t,
   uint64_t,
-  double
+  double,
+  LinkType
 >;
 
 struct UniqueKey {

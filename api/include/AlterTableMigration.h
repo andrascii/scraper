@@ -16,16 +16,15 @@ class AlterTableMigration : public AbstractDbMigration {
     std::vector<UniqueKey> drop_unique_keys;
   };
 
-  AlterTableMigration(const std::string& migration_id, const SharedPgConnection& connection, Params params);
+  AlterTableMigration(const std::string& migration_id, Params params);
 
  private:
-  void Execute() const override;
+  void Execute(const SharedPgConnection& connection) const override;
 
   [[nodiscard]] std::string BuildSqlQuery() const;
 
  private:
   Params params_;
-  SharedPgConnection connection_;
 };
 
 }

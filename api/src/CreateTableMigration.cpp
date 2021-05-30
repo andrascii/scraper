@@ -5,11 +5,9 @@ namespace api {
 
 CreateTableMigration::CreateTableMigration(
   const std::string& migration_id,
-  const SharedPgConnection& connection,
   Params params
-) : AbstractDbMigration{migration_id, connection},
-    params_{std::move(params)},
-    connection_{connection} {
+) : AbstractDbMigration{migration_id},
+    params_{std::move(params)} {
   if (params_.table_name.empty()) {
     throw std::invalid_argument{"Empty table name to create"};
   }
@@ -19,10 +17,10 @@ CreateTableMigration::CreateTableMigration(
   }
 }
 
-void CreateTableMigration::Execute() const {
+void CreateTableMigration::Execute(const SharedPgConnection& connection) const {
   std::string sql = BuildSqlQuery();
   SPDLOG_INFO("Executing query: {:s}", sql);
-  pqxx::work work{*connection_};
+  pqxx::work work{*connection};
   work.exec0(sql);
   work.commit();
 }

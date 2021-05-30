@@ -7,47 +7,40 @@ namespace api {
 
 DbProxyApplication::DbProxyApplication(
   SharedSettings settings,
-  std::unique_ptr<IMessagePublisher> publisher)
+  //std::unique_ptr<IMessagePublisher> publisher,
+  std::vector<std::unique_ptr<IMigrator>> migrators)
   : settings_{std::move(settings)},
-    publisher_{std::move(publisher)} {
-  std::stringstream connection_string;
+    //publisher_{std::move(publisher)},
+    migrators_{std::move(migrators)} {}
 
-  connection_string
-    << "postgresql://"
-    << settings_->DatabaseUser() << ":"
-    << settings_->DatabasePassword() << "@"
-    << settings_->DatabaseHost() << ":"
-    << settings_->DatabasePort() << "/"
-    << settings_->Database();
+std::error_code DbProxyApplication::Start() {
+  for (const auto& migrator : migrators_) {
+    migrator->Apply();
+  }
 
-  pqxx::connection c{ connection_string.str() };
+  StartHttpServer();
+  return std::error_code{};
 }
 
-std::error_code DbProxyApplication::Start() noexcept {
-  try {
-    const auto thread_count = std::max<int>(static_cast<int>(std::thread::hardware_concurrency()), 1);
-    const auto address = boost::asio::ip::make_address("0.0.0.0");
-    const auto port = uint16_t{ settings_->HttpPort() };
+void DbProxyApplication::StartHttpServer() const {
+  const auto thread_count = std::max<int>(static_cast<int>(std::thread::hardware_concurrency()), 1);
+  const auto address = boost::asio::ip::make_address("0.0.0.0");
+  const auto port = uint16_t{ settings_->HttpPort() };
 
-    auto ctx = boost::asio::io_context{thread_count};
-    std::make_shared<Listener>(ctx, boost::asio::ip::tcp::endpoint{address, port})->Run();
+  auto ctx = boost::asio::io_context{thread_count};
+  std::make_shared<Listener>(ctx, boost::asio::ip::tcp::endpoint{address, port})->Run();
 
-    std::vector<std::thread> threads;
-    threads.reserve(thread_count - 1);
+  std::vector<std::thread> threads;
+  threads.reserve(thread_count - 1);
 
-    for (auto i = thread_count - 1; i > 0; --i) {
-      threads.emplace_back([&ctx, i] {
-        common::Helpers::SetCurrentThreadName("listener #" + std::to_string(i));
-        ctx.run();
-      });
-    }
-
-    ctx.run();
-    return {};
-  } catch (const std::exception& ex) {
-    SPDLOG_ERROR("Something bad: {:s}", ex.what());
-    return std::make_error_code(std::errc::operation_canceled);
+  for (auto i = thread_count - 1; i > 0; --i) {
+    threads.emplace_back([&ctx, i] {
+      common::Helpers::SetCurrentThreadName("listener #" + std::to_string(i));
+      ctx.run();
+    });
   }
+
+  ctx.run();
 }
 
 }

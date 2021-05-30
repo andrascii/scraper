@@ -2,12 +2,7 @@
 #include "Settings.h"
 #include "Exceptions.h"
 #include "KafkaPublisher.h"
-
-struct Data {
-  int x;
-  int y;
-  int z;
-};
+#include "ScraperMigrator.h"
 
 int main(int argc, char** argv) {
   try {
@@ -36,7 +31,18 @@ int main(int argc, char** argv) {
     }
 
     common::Logger()->set_level(settings->LogLevel());
-    api::DbProxyApplication app{settings, std::make_unique<api::KafkaPublisher>(settings)};
+
+    const auto pg_connection_pool = std::make_shared<api::PgConnectionPool>(settings, 32);
+
+    std::vector<std::unique_ptr<api::IMigrator>> migrators;
+    migrators.emplace_back(std::make_unique<api::ScraperMigrator>(settings, pg_connection_pool));
+
+    api::DbProxyApplication app{
+      settings,
+      //std::make_unique<api::KafkaPublisher>(settings),
+      std::move(migrators)
+    };
+
     const auto error = app.Start();
 
     if (error) {

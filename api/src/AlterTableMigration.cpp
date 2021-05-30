@@ -5,20 +5,18 @@ namespace api {
 
 AlterTableMigration::AlterTableMigration(
   const std::string& migration_id,
-  const SharedPgConnection& connection,
   Params params
-) : AbstractDbMigration{migration_id, connection},
-    params_{std::move(params)},
-    connection_{connection} {
+) : AbstractDbMigration{migration_id},
+    params_{std::move(params)} {
   if (params_.table_name.empty()) {
     throw std::invalid_argument{"Empty table name to create"};
   }
 }
 
-void AlterTableMigration::Execute() const {
+void AlterTableMigration::Execute(const SharedPgConnection& connection) const {
   std::string sql = BuildSqlQuery();
   SPDLOG_INFO("Executing query: {:s}", sql);
-  pqxx::work work{*connection_};
+  pqxx::work work{*connection};
   work.exec0(sql);
   work.commit();
 }
@@ -55,7 +53,7 @@ std::string AlterTableMigration::BuildSqlQuery() const {
   });
 
   std::vector<std::string> sql_operations;
-  sql_operations.push_back(boost::algorithm::join(drop_column_sql_operations, '\n'));
+  sql_operations.push_back(boost::algorithm::join(drop_column_sql_operations, "\n"));
   sql_operations.push_back(boost::algorithm::join(add_column_sql_operations, ",\n"));
   sql_operations.push_back(boost::algorithm::join(add_foreign_keys_sql_operations, ",\n"));
   sql_operations.push_back(boost::algorithm::join(drop_unique_keys_sql_operations, ",\n"));
@@ -65,7 +63,7 @@ std::string AlterTableMigration::BuildSqlQuery() const {
     return str.empty();
   }), end(sql_operations));
 
-  return fmt::format("ALTER TABLE {:s} {:s}", params_.table_name, boost::algorithm::join(sql_operations, ','));
+  return fmt::format("ALTER TABLE {:s} {:s}", params_.table_name, boost::algorithm::join(sql_operations, ","));
 }
 
 }

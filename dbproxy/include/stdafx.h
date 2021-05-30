@@ -69,5 +69,10 @@
 //
 #include <cppkafka/cppkafka.h>
 
+//
+// pqxx
+//
+#include <pqxx/pqxx>
+
 using namespace std::chrono_literals;
 using namespace std::string_literals;

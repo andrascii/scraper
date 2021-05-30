@@ -15,16 +15,15 @@ class CreateTableMigration : public AbstractDbMigration {
     std::vector<UniqueKey> unique_keys;
   };
 
-  CreateTableMigration(const std::string& migration_id, const SharedPgConnection& connection, Params params);
+  CreateTableMigration(const std::string& migration_id, Params params);
 
  private:
-  void Execute() const override;
+  void Execute(const SharedPgConnection& connection) const override;
 
   [[nodiscard]] std::string BuildSqlQuery() const;
 
  private:
   Params params_;
-  SharedPgConnection connection_;
 };
 
 }
