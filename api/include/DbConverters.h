@@ -31,13 +31,36 @@ constexpr const char* ToString(LinkType type) noexcept {
 
 inline std::string DefaultValueToPostgreSqlString(const DefaultValueType& value) {
   common::VariantVisitor visitor{
-    [](bool value) { return value ? "true"s : "false"s; },
-    [](NullType) { return "null"s; },
-    [](const std::string& value) { return value; },
-    [](int64_t value) { return std::to_string(value); },
-    [](uint64_t value) { return std::to_string(value); },
-    [](double value) { return std::to_string(value); },
-    [](LinkType value) { return std::string{ToString(value)}; }
+    [](std::monostate) {
+      common::Logger()->critical("Column default type is in invalid state");
+      abort();
+      return "invalid state"s;
+    },
+    [](bool value) {
+      return value ? "true"s : "false"s;
+    },
+    [](NullType) {
+      return "null"s;
+    },
+    [](const std::string& value) {
+      std::stringstream stream;
+      stream << std::quoted(value, '\'');
+      return stream.str();
+    },
+    [](int64_t value) {
+      return std::to_string(value);
+    },
+    [](uint64_t value) {
+      return std::to_string(value);
+    },
+    [](double value) {
+      return std::to_string(value);
+    },
+    [](LinkType value) {
+      std::stringstream stream;
+      stream << std::quoted(ToString(value), '\'');
+      return stream.str();
+    }
   };
 
   return std::visit(visitor, value);
@@ -69,7 +92,7 @@ inline std::string ColumnToPostgreSqlString(const ColumnDefinition& column, cons
     lst.emplace_back();
   };
 
-  if (column.default_value.index() != std::variant_npos) {
+  if (!std::holds_alternative<std::monostate>(column.default_value)) {
     lst.push_back("DEFAULT " + DefaultValueToPostgreSqlString(column.default_value));
   } else {
     lst.emplace_back();

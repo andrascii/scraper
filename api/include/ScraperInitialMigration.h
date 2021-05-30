@@ -11,6 +11,7 @@ class ScraperInitialMigration : public AbstractDbMigration {
 
  private:
   void Execute(const SharedPgConnection& connection) const override;
+  void MarkAsApplied(const SharedPgConnection& connection) const override;
   [[nodiscard]] bool IsAlreadyApplied(const SharedPgConnection& connection, const std::string& migration_id) const override;
 };
 

@@ -151,7 +151,7 @@ ScraperMigrator::ScraperMigrator(SharedSettings settings, std::shared_ptr<PgConn
 }
 
 void ScraperMigrator::Apply() const {
-  SPDLOG_INFO("Applying scraper migrations");
+  SPDLOG_INFO("applying scraper migrations");
 
   const auto wrapper = pool_->Take();
 
@@ -159,7 +159,7 @@ void ScraperMigrator::Apply() const {
     migration->ExecuteIfNeeded(wrapper.Connection());
   }
 
-  SPDLOG_INFO("Looks like all is ok");
+  SPDLOG_INFO("looks like all is ok");
 }
 
 }

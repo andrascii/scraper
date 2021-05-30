@@ -5,14 +5,22 @@ namespace api {
 AbstractDbMigration::AbstractDbMigration(std::string migration_id)
   : migration_id_{std::move(migration_id)} {}
 
+const std::string& AbstractDbMigration::MigrationId() const noexcept {
+  return migration_id_;
+}
+
 void AbstractDbMigration::ExecuteIfNeeded(const SharedPgConnection& connection) const {
+  SPDLOG_INFO("applying {:s} migration", std::quoted(migration_id_));
+
   if (IsAlreadyApplied(connection, migration_id_)) {
-    SPDLOG_INFO("Migration id '{:s}' has already been applied", migration_id_);
+    SPDLOG_INFO("migration {:s} has already been applied", std::quoted(migration_id_));
     return;
   }
 
   Execute(connection);
   MarkAsApplied(connection);
+
+  SPDLOG_INFO("migration {:s} successfully applied", std::quoted(migration_id_));
 }
 
 void AbstractDbMigration::MarkAsApplied(const SharedPgConnection& connection) const {

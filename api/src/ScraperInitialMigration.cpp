@@ -22,6 +22,10 @@ void ScraperInitialMigration::Execute(const SharedPgConnection& connection) cons
   }
 }
 
+void ScraperInitialMigration::MarkAsApplied(const SharedPgConnection& connection) const {
+  boost::ignore_unused(connection);
+}
+
 bool ScraperInitialMigration::IsAlreadyApplied(const SharedPgConnection& connection, const std::string& migration_id) const {
   boost::ignore_unused(migration_id);
 

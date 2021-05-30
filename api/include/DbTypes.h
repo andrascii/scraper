@@ -23,6 +23,7 @@ struct NullType {};
 inline NullType Null;
 
 using DefaultValueType = std::variant<
+  std::monostate, // used to indicate that the variant has no value
   bool,
   NullType,
   std::string,
