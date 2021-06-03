@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DbTypes.h"
+#include "db_types.h"
 
 namespace api {
 

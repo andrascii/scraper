@@ -1,8 +1,41 @@
-#include "DbProxyApplication.h"
-#include "Settings.h"
-#include "Exceptions.h"
-#include "KafkaPublisher.h"
-#include "ScraperMigrator.h"
+#include "db_proxy_application.h"
+#include "settings.h"
+#include "exceptions.h"
+#include "kafka_publisher.h"
+#include "scraper_migrator.h"
+
+namespace {
+
+using namespace api;
+
+DbProxyApplication* app_ptr;
+
+std::string SignalToString(int signal) {
+  switch(signal) {
+    case SIGTERM: return "SIGTERM";
+    case SIGSEGV: return "SIGSEGV";
+    case SIGINT: return "SIGINT";
+    case SIGILL: return "SIGILL";
+    case SIGABRT: return "SIGABRT";
+    case SIGFPE: return "SIGFPE";
+    default: return std::to_string(signal);
+  }
+}
+
+void OnAboutInterruptProcess(int signal) {
+  SPDLOG_INFO("Received {:s} signal", SignalToString(signal));
+
+  if (!app_ptr) {
+    SPDLOG_CRITICAL("Completing application by calling std::exit cause app_ptr was not set");
+    exit(EXIT_SUCCESS);
+  }
+
+  app_ptr->Stop();
+
+  SPDLOG_INFO("Application stopped");
+}
+
+}
 
 int main(int argc, char** argv) {
   try {
@@ -42,6 +75,9 @@ int main(int argc, char** argv) {
       //std::make_unique<api::KafkaPublisher>(settings),
       std::move(migrators)
     };
+
+    app_ptr = &app;
+    signal(SIGINT, OnAboutInterruptProcess);
 
     const auto error = app.Start();
 

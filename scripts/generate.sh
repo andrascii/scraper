@@ -1,2 +1,2 @@
 #!/bin/bash
-cmake -B gdbbuild -DCMAKE_TOOLCHAIN_FILE=$VCPKG_CMAKE_FILE
+cmake -B build -DCMAKE_TOOLCHAIN_FILE=$VCPKG_CMAKE_FILE

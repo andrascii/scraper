@@ -1,10 +1,10 @@
 #pragma once
 
-#include "IApplication.h"
-#include "Helpers.h"
-#include "Settings.h"
-#include "IMessagePublisher.h"
-#include "IMigrator.h"
+#include "iapplication.h"
+#include "helpers.h"
+#include "settings.h"
+#include "imessage_publisher.h"
+#include "imigrator.h"
 
 namespace api {
 
@@ -16,14 +16,16 @@ class DbProxyApplication : public IApplication {
     std::vector<std::unique_ptr<IMigrator>> migrators);
 
   std::error_code Start();
+  void Stop() noexcept;
 
  private:
-  void StartHttpServer() const;
+  std::error_code StartHttpServer();
 
  private:
   SharedSettings settings_;
   std::unique_ptr<IMessagePublisher> publisher_;
   std::vector<std::unique_ptr<IMigrator>> migrators_;
+  boost::asio::io_context ctx_;
 };
 
 }

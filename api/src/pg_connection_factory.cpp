@@ -1,4 +1,4 @@
-#include "PgConnectionFactory.h"
+#include "pg_connection_factory.h"
 
 namespace api {
 

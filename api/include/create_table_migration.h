@@ -1,8 +1,8 @@
 #pragma once
 
-#include "AbstractDbMigration.h"
-#include "PgConnectionFactory.h"
-#include "DbTypes.h"
+#include "abstract_db_migration.h"
+#include "pg_connection_factory.h"
+#include "db_types.h"
 
 namespace api {
 

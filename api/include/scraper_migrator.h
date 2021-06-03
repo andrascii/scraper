@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IMigrator.h"
-#include "IDbMigration.h"
-#include "PgConnectionPool.h"
+#include "imigrator.h"
+#include "idb_migration.h"
+#include "pg_connection_pool.h"
 
 namespace api {
 

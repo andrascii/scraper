@@ -1,7 +1,7 @@
 #pragma once
 
-#include "AbstractDbMigration.h"
-#include "DbTypes.h"
+#include "abstract_db_migration.h"
+#include "db_types.h"
 
 namespace api {
 

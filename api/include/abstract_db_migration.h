@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IDbMigration.h"
-#include "PgConnectionFactory.h"
+#include "idb_migration.h"
+#include "pg_connection_factory.h"
 
 namespace api {
 

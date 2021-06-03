@@ -1,5 +1,5 @@
-#include "AlterTableMigration.h"
-#include "DbConverters.h"
+#include "alter_table_migration.h"
+#include "db_converters.h"
 
 namespace api {
 

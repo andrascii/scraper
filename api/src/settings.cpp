@@ -1,6 +1,6 @@
-#include "Settings.h"
-#include "Errors.h"
-#include "Exceptions.h"
+#include "settings.h"
+#include "errors.h"
+#include "exceptions.h"
 
 namespace {
 

@@ -8,6 +8,7 @@ enum class DbProxyError {
 };
 
 auto MakeErrorCode(DbProxyError code) noexcept -> std::error_code;
+auto MakeErrorCode(boost::system::error_code error) noexcept -> std::error_code;
 
 }
 

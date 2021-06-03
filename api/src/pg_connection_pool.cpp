@@ -1,5 +1,5 @@
-#include "PgConnectionPool.h"
-#include "PgConnectionFactory.h"
+#include "pg_connection_pool.h"
+#include "pg_connection_factory.h"
 
 namespace api {
 

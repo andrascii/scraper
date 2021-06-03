@@ -1,7 +1,7 @@
-#include "ScraperMigrator.h"
-#include "AlterTableMigration.h"
-#include "CreateTableMigration.h"
-#include "ScraperInitialMigration.h"
+#include "scraper_migrator.h"
+#include "alter_table_migration.h"
+#include "create_table_migration.h"
+#include "scraper_initial_migration.h"
 
 namespace api {
 

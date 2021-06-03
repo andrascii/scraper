@@ -1,7 +1,7 @@
 #pragma once
 
-#include "VariantVisitor.h"
-#include "PgConnectionFactory.h"
+#include "variant_visitor.h"
+#include "pg_connection_factory.h"
 
 namespace api {
 

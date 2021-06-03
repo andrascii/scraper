@@ -1,4 +1,4 @@
-#include "Helpers.h"
+#include "helpers.h"
 
 #if defined (USE_WINDOWS_SET_THREAD_NAME_HACK)
 

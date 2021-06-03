@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Settings.h"
+#include "settings.h"
 
 namespace api {
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "PgConnectionFactory.h"
-#include "Settings.h"
+#include "pg_connection_factory.h"
+#include "settings.h"
 
 namespace api {
 

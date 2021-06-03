@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IMessagePublisher.h"
-#include "Settings.h"
+#include "imessage_publisher.h"
+#include "settings.h"
 
 namespace api {
 
