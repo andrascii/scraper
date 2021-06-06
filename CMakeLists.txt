@@ -70,6 +70,8 @@ find_package(libpqxx CONFIG REQUIRED)
 find_package(simdjson CONFIG REQUIRED)
 find_package(RdKafka CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_package(tl-expected CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 #
 # project variables

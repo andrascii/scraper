@@ -4,7 +4,9 @@ namespace api {
 
 enum class DbProxyError {
   kCommandLineParsingError = 1,
-  kHttpServerInitializationFailed
+  kHttpServerInitializationFailed,
+  kUndefinedPostHttpHandler,
+  kUndefinedGetHttpHandler,
 };
 
 auto MakeErrorCode(DbProxyError code) noexcept -> std::error_code;

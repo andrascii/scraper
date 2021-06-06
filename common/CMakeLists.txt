@@ -19,7 +19,6 @@ set(PRECOMPILED_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h")
 #
 # deps include directories
 #
-list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/deps/tl")
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${INCLUDES_DIR}")
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${Boost_INCLUDE_DIRS}")
 
@@ -28,6 +27,7 @@ list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${Boost_INCLUDE_DIRS}")
 #
 list(APPEND DEPS ${Boost_LIBRARIES})
 list(APPEND DEPS spdlog::spdlog)
+list(APPEND DEPS tl::expected)
 
 #
 # collecting sources and headers

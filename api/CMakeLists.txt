@@ -18,7 +18,6 @@ set(PRECOMPILED_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h")
 # deps include directories
 #
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/${COMMON_LIB}/include")
-list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/deps/tl")
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${INCLUDES_DIR}")
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${Boost_INCLUDE_DIRS}")
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${CPPKAFKA_INCLUDES}")
@@ -36,6 +35,9 @@ list(APPEND DEPS libpqxx::pqxx)
 list(APPEND DEPS simdjson::simdjson)
 list(APPEND DEPS simdjson::simdjson-flags)
 list(APPEND DEPS simdjson::simdjson-headers)
+list(APPEND DEPS tl::expected)
+list(APPEND DEPS nlohmann_json)
+list(APPEND DEPS nlohmann_json::nlohmann_json)
 
 #
 # collecting sources and headers

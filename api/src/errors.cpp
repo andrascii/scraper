@@ -18,6 +18,12 @@ public:
       case DbProxyError::kHttpServerInitializationFailed: {
         return "HTTP server initialization failed";
       }
+      case DbProxyError::kUndefinedPostHttpHandler: {
+        return "Undefined POST HTTP handler type";
+      }
+      case DbProxyError::kUndefinedGetHttpHandler: {
+        return "Undefined GET HTTP handler type";
+      }
       default: {
         return "Undefined error code";
       }
