@@ -2,7 +2,7 @@
 
 namespace api {
 
-KafkaPublisher::KafkaPublisher(const SharedSettings& settings)
+KafkaPublisher::KafkaPublisher(const std::shared_ptr<Settings>& settings)
   : producer_{ CreateConfiguration(settings) },
     settings_ { settings } {}
 
@@ -16,7 +16,7 @@ std::error_code KafkaPublisher::Publish(const std::string& message) noexcept {
   }
 }
 
-cppkafka::Configuration KafkaPublisher::CreateConfiguration(const SharedSettings& settings) noexcept {
+cppkafka::Configuration KafkaPublisher::CreateConfiguration(const std::shared_ptr<Settings>& settings) noexcept {
   return cppkafka::Configuration{
     { "metadata.broker.list", settings->KafkaBrokerList() }
   };

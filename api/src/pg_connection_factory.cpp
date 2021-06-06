@@ -2,7 +2,7 @@
 
 namespace api {
 
-std::shared_ptr<pqxx::connection> PgConnectionFactory::Create(const SharedSettings& settings) {
+std::shared_ptr<pqxx::connection> PgConnectionFactory::Create(const std::shared_ptr<Settings>& settings) {
   std::stringstream connection_string;
 
   connection_string

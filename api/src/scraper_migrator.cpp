@@ -5,7 +5,7 @@
 
 namespace api {
 
-ScraperMigrator::ScraperMigrator(SharedSettings settings, std::shared_ptr<PgConnectionPool> pool)
+ScraperMigrator::ScraperMigrator(std::shared_ptr<Settings> settings, std::shared_ptr<PgConnectionPool> pool)
   : settings_{std::move(settings)},
     pool_{std::move(pool)} {
   migrations_.emplace_back(std::make_unique<ScraperInitialMigration>());

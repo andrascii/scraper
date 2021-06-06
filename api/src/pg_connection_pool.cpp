@@ -16,7 +16,7 @@ const std::shared_ptr<pqxx::connection>& PgConnectionPool::ConnectionWrapper::Co
 }
 
 
-PgConnectionPool::PgConnectionPool(SharedSettings settings, size_t connection_count)
+PgConnectionPool::PgConnectionPool(std::shared_ptr<Settings> settings, size_t connection_count)
   : settings_{std::move(settings)} {
   for (auto i{ 0u }; i < connection_count; ++i) {
     pool_.push_back(Descriptor{

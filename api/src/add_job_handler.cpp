@@ -2,8 +2,8 @@
 
 namespace api {
 
-AddJobHandler::AddJobHandler(const std::shared_ptr<PgConnectionPool>& pool)
-  : pool_{pool} {}
+AddJobHandler::AddJobHandler(std::shared_ptr<PgConnectionPool> pool)
+  : pool_{std::move(pool)} {}
 
 IHttpHandler::ExpectedResponse AddJobHandler::Handle(RequestType&& request) noexcept {
   const auto wrapper = pool_->Take();

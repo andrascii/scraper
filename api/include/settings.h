@@ -4,12 +4,9 @@
 
 namespace api {
 
-class Settings;
-using SharedSettings = std::shared_ptr<Settings>;
-
 class Settings final {
  public:
-  static common::Expected<SharedSettings, std::error_code> Read(
+  static common::Expected<std::shared_ptr<Settings>, std::error_code> Read(
     int argc,
     char** argv,
     const std::string& app_name,

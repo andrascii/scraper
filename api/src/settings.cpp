@@ -57,7 +57,7 @@ T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) 
 
 namespace api {
 
-common::Expected<SharedSettings, std::error_code>
+common::Expected<std::shared_ptr<Settings>, std::error_code>
 Settings::Read(
   int argc,
   char** argv,

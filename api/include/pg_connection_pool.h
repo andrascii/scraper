@@ -28,7 +28,7 @@ class PgConnectionPool final : public std::enable_shared_from_this<PgConnectionP
     std::shared_ptr<pqxx::connection> connection_;
   };
 
-  PgConnectionPool(SharedSettings settings, size_t connection_count);
+  PgConnectionPool(std::shared_ptr<Settings> settings, size_t connection_count);
   PgConnectionPool(PgConnectionPool&& other) = delete;
   PgConnectionPool(const PgConnectionPool& other) = delete;
   PgConnectionPool& operator=(PgConnectionPool&& other) = delete;
@@ -49,7 +49,7 @@ class PgConnectionPool final : public std::enable_shared_from_this<PgConnectionP
   std::mutex mutex_;
   std::condition_variable condition_;
   std::vector<Descriptor> pool_;
-  SharedSettings settings_;
+  std::shared_ptr<Settings> settings_;
 };
 
 }

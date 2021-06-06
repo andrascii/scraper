@@ -11,7 +11,7 @@ namespace api {
 class DbProxyApplication : public IApplication {
  public:
   DbProxyApplication(
-    SharedSettings settings,
+    std::shared_ptr<Settings> settings,
     //std::unique_ptr<IMessagePublisher> publisher,
     std::vector<std::unique_ptr<IMigrator>> migrators);
 
@@ -22,7 +22,7 @@ class DbProxyApplication : public IApplication {
   std::error_code StartHttpServer();
 
  private:
-  SharedSettings settings_;
+  std::shared_ptr<Settings> settings_;
   std::unique_ptr<IMessagePublisher> publisher_;
   std::vector<std::unique_ptr<IMigrator>> migrators_;
   boost::asio::io_context ctx_;

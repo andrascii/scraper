@@ -7,7 +7,7 @@
 namespace api {
 
 DbProxyApplication::DbProxyApplication(
-  SharedSettings settings,
+  std::shared_ptr<Settings> settings,
   //std::unique_ptr<IMessagePublisher> publisher,
   std::vector<std::unique_ptr<IMigrator>> migrators)
   : settings_{std::move(settings)},

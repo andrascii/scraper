@@ -7,16 +7,16 @@ namespace api {
 
 class KafkaPublisher final : public IMessagePublisher {
  public:
-  KafkaPublisher(const SharedSettings& settings);
+  KafkaPublisher(const std::shared_ptr<Settings>& settings);
 
   std::error_code Publish(const std::string& message) noexcept override;
 
  private:
-  static cppkafka::Configuration CreateConfiguration(const SharedSettings& settings) noexcept;
+  static cppkafka::Configuration CreateConfiguration(const std::shared_ptr<Settings>& settings) noexcept;
 
  private:
   cppkafka::Producer producer_;
-  SharedSettings settings_;
+  std::shared_ptr<Settings> settings_;
 };
 
 }

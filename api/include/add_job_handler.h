@@ -7,7 +7,7 @@ namespace api {
 
 class AddJobHandler final : public IHttpHandler {
  public:
-  AddJobHandler(const std::shared_ptr<PgConnectionPool>& pool);
+  AddJobHandler(std::shared_ptr<PgConnectionPool> pool);
 
   ExpectedResponse Handle(RequestType&& request) noexcept override;
 
