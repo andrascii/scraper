@@ -13,7 +13,7 @@ AlterTableMigration::AlterTableMigration(
   }
 }
 
-void AlterTableMigration::Execute(const SharedPgConnection& connection) const {
+void AlterTableMigration::Execute(const std::shared_ptr<pqxx::connection>& connection) const {
   std::string sql = BuildSqlQuery();
   SPDLOG_INFO("Executing query: {:s}", sql);
   pqxx::work work{*connection};

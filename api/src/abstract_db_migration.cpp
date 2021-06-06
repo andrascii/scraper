@@ -9,7 +9,7 @@ const std::string& AbstractDbMigration::MigrationId() const noexcept {
   return migration_id_;
 }
 
-void AbstractDbMigration::ExecuteIfNeeded(const SharedPgConnection& connection) const {
+void AbstractDbMigration::ExecuteIfNeeded(const std::shared_ptr<pqxx::connection>& connection) const {
   SPDLOG_INFO("applying {:s} migration", std::quoted(migration_id_));
 
   if (IsAlreadyApplied(connection, migration_id_)) {
@@ -23,7 +23,7 @@ void AbstractDbMigration::ExecuteIfNeeded(const SharedPgConnection& connection) 
   SPDLOG_INFO("migration {:s} successfully applied", std::quoted(migration_id_));
 }
 
-void AbstractDbMigration::MarkAsApplied(const SharedPgConnection& connection) const {
+void AbstractDbMigration::MarkAsApplied(const std::shared_ptr<pqxx::connection>& connection) const {
   try {
     pqxx::work tx{*connection};
     tx.exec_params("INSERT INTO db_migrations (migration_id) VALUES($1)", migration_id_);
@@ -34,7 +34,7 @@ void AbstractDbMigration::MarkAsApplied(const SharedPgConnection& connection) co
   }
 }
 
-bool AbstractDbMigration::IsAlreadyApplied(const SharedPgConnection& connection, const std::string& migration_id) const {
+bool AbstractDbMigration::IsAlreadyApplied(const std::shared_ptr<pqxx::connection>& connection, const std::string& migration_id) const {
   try {
     pqxx::work tx{*connection};
     const auto result = tx.exec_params("SELECT * FROM db_migrations WHERE migration_id=$1", migration_id_);

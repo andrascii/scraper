@@ -5,24 +5,27 @@
 
 namespace api {
 
+//
+// PgConnectionPool is thread safe
+//
 class PgConnectionPool final : public std::enable_shared_from_this<PgConnectionPool> {
  public:
   class ConnectionWrapper final {
    public:
-    using Cleaner = std::function<void(const SharedPgConnection&)>;
+    using Cleaner = std::function<void(const std::shared_ptr<pqxx::connection>&)>;
 
-    ConnectionWrapper(SharedPgConnection connection, Cleaner cleaner);
+    ConnectionWrapper(std::shared_ptr<pqxx::connection> connection, Cleaner cleaner);
     ConnectionWrapper(ConnectionWrapper&& other) = default;
     ConnectionWrapper(const ConnectionWrapper& other) = delete;
     ConnectionWrapper& operator=(ConnectionWrapper&& other) = delete;
     ConnectionWrapper& operator=(const ConnectionWrapper& other) = delete;
     ~ConnectionWrapper();
 
-    [[nodiscard]] const SharedPgConnection& Connection() const noexcept;
+    [[nodiscard]] const std::shared_ptr<pqxx::connection>& Connection() const noexcept;
 
    private:
     Cleaner cleaner_;
-    SharedPgConnection connection_;
+    std::shared_ptr<pqxx::connection> connection_;
   };
 
   PgConnectionPool(SharedSettings settings, size_t connection_count);
@@ -35,11 +38,11 @@ class PgConnectionPool final : public std::enable_shared_from_this<PgConnectionP
   ConnectionWrapper Take() noexcept;
 
  private:
-  void Free(const SharedPgConnection& to_free) noexcept;
+  void Free(const std::shared_ptr<pqxx::connection>& to_free) noexcept;
 
  private:
   struct Descriptor {
-    SharedPgConnection connection;
+    std::shared_ptr<pqxx::connection> connection;
     bool is_acquired = false;
   };
 

@@ -5,7 +5,7 @@ namespace api {
 ScraperInitialMigration::ScraperInitialMigration()
   : AbstractDbMigration{"fake_migration_id"} {}
 
-void ScraperInitialMigration::Execute(const SharedPgConnection& connection) const {
+void ScraperInitialMigration::Execute(const std::shared_ptr<pqxx::connection>& connection) const {
   try {
     const auto create_db_migrations_table_sql = R"(
       CREATE TABLE db_migrations (
@@ -22,11 +22,11 @@ void ScraperInitialMigration::Execute(const SharedPgConnection& connection) cons
   }
 }
 
-void ScraperInitialMigration::MarkAsApplied(const SharedPgConnection& connection) const {
+void ScraperInitialMigration::MarkAsApplied(const std::shared_ptr<pqxx::connection>& connection) const {
   boost::ignore_unused(connection);
 }
 
-bool ScraperInitialMigration::IsAlreadyApplied(const SharedPgConnection& connection, const std::string& migration_id) const {
+bool ScraperInitialMigration::IsAlreadyApplied(const std::shared_ptr<pqxx::connection>& connection, const std::string& migration_id) const {
   boost::ignore_unused(migration_id);
 
   try {

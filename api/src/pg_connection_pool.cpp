@@ -3,7 +3,7 @@
 
 namespace api {
 
-PgConnectionPool::ConnectionWrapper::ConnectionWrapper(SharedPgConnection connection, Cleaner cleaner)
+PgConnectionPool::ConnectionWrapper::ConnectionWrapper(std::shared_ptr<pqxx::connection> connection, Cleaner cleaner)
   : cleaner_{std::move(cleaner)},
     connection_{std::move(connection)} {}
 
@@ -11,7 +11,7 @@ PgConnectionPool::ConnectionWrapper::~ConnectionWrapper() {
   cleaner_(connection_);
 }
 
-const SharedPgConnection& PgConnectionPool::ConnectionWrapper::Connection() const noexcept {
+const std::shared_ptr<pqxx::connection>& PgConnectionPool::ConnectionWrapper::Connection() const noexcept {
   return connection_;
 }
 
@@ -43,13 +43,13 @@ PgConnectionPool::ConnectionWrapper PgConnectionPool::Take() noexcept {
 
   return ConnectionWrapper{
     iterator->connection,
-    [self = shared_from_this()](const SharedPgConnection& connection) {
+    [self = shared_from_this()](const std::shared_ptr<pqxx::connection>& connection) {
       self->Free(connection);
     }
   };
 }
 
-void PgConnectionPool::Free(const SharedPgConnection& to_free) noexcept {
+void PgConnectionPool::Free(const std::shared_ptr<pqxx::connection>& to_free) noexcept {
   std::lock_guard lk{mutex_};
 
   const auto predicate = [&](const Descriptor& connection) {

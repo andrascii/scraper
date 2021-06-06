@@ -18,7 +18,7 @@ class CreateTableMigration : public AbstractDbMigration {
   CreateTableMigration(const std::string& migration_id, Params params);
 
  private:
-  void Execute(const SharedPgConnection& connection) const override;
+  void Execute(const std::shared_ptr<pqxx::connection>& connection) const override;
 
   [[nodiscard]] std::string BuildSqlQuery() const;
 
