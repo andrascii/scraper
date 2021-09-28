@@ -19,7 +19,7 @@ enum class PostHttpHandlerType {
   kGetReportResults,
 };
 
-inline common::Expected<PostHttpHandlerType, std::error_code> ToPostHttpHandlerType(const std::string& name) noexcept {
+inline tl::expected<PostHttpHandlerType, std::error_code> ToPostHttpHandlerType(const std::string& name) noexcept {
   if (boost::iequals(name, "add-crawl-job")) return PostHttpHandlerType::kAddCrawlJob;
   if (boost::iequals(name, "remove-crawl-job")) return PostHttpHandlerType::kRemoveCrawlJob;
   if (boost::iequals(name, "enable-crawl-job")) return PostHttpHandlerType::kEnableCrawlJob;
@@ -30,10 +30,10 @@ inline common::Expected<PostHttpHandlerType, std::error_code> ToPostHttpHandlerT
   if (boost::iequals(name, "remove-report-job")) return PostHttpHandlerType::kRemoveReportJob;
   if (boost::iequals(name, "report-job-list")) return PostHttpHandlerType::kReportJobList;
   if (boost::iequals(name, "get-report-results")) return PostHttpHandlerType::kGetReportResults;
-  return common::Unexpected<std::error_code>{MakeErrorCode(DbProxyError::kUndefinedPostHttpHandler)};
+  return tl::unexpected<std::error_code>{MakeErrorCode(Error::kUndefinedPostHttpHandler)};
 }
 
-inline common::Expected<std::string, std::error_code> FromPostHttpHandlerType(PostHttpHandlerType type) {
+inline tl::expected<std::string, std::error_code> FromPostHttpHandlerType(PostHttpHandlerType type) {
   switch (type) {
     case PostHttpHandlerType::kAddCrawlJob: return "add-crawl-job";
     case PostHttpHandlerType::kRemoveCrawlJob: return "remove-crawl-job";
@@ -45,7 +45,7 @@ inline common::Expected<std::string, std::error_code> FromPostHttpHandlerType(Po
     case PostHttpHandlerType::kRemoveReportJob: return "remove-report-job";
     case PostHttpHandlerType::kReportJobList: return "report-job-list";
     case PostHttpHandlerType::kGetReportResults: return "get-report-results";
-    default: return common::Unexpected<std::error_code>{MakeErrorCode(DbProxyError::kUndefinedPostHttpHandler)};
+    default: return tl::unexpected<std::error_code>{MakeErrorCode(Error::kUndefinedPostHttpHandler)};
   }
 }
 
@@ -56,12 +56,12 @@ enum class GetHttpHandlerType {
   kBundleJs,
 };
 
-inline common::Expected<PostHttpHandlerType, std::error_code> ToGetHttpHandlerType(const std::string& name) noexcept {
-  return common::Unexpected<std::error_code>{MakeErrorCode(DbProxyError::kUndefinedPostHttpHandler)};
+inline tl::expected<PostHttpHandlerType, std::error_code> ToGetHttpHandlerType(const std::string& name) noexcept {
+  return tl::unexpected<std::error_code>{MakeErrorCode(Error::kUndefinedPostHttpHandler)};
 }
 
-inline common::Expected<std::string, std::error_code> FromGetHttpHandlerType(GetHttpHandlerType type) {
-  return common::Unexpected<std::error_code>{MakeErrorCode(DbProxyError::kUndefinedPostHttpHandler)};
+inline tl::expected<std::string, std::error_code> FromGetHttpHandlerType(GetHttpHandlerType type) {
+  return tl::unexpected<std::error_code>{MakeErrorCode(Error::kUndefinedPostHttpHandler)};
 }
 
 //

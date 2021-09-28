@@ -7,17 +7,23 @@ namespace api {
 
 class AbstractDbMigration : public IDbMigration {
 public:
-  AbstractDbMigration(std::string migration_id);
+  explicit AbstractDbMigration(std::string migration_id);
 
-  const std::string& MigrationId() const noexcept override;
+  const std::shared_ptr<IDbMigration>& AddNext(const std::shared_ptr<IDbMigration>& migration) override;
+  [[nodiscard]] const std::string& MigrationId() const noexcept override;
   void ExecuteIfNeeded(const std::shared_ptr<pqxx::connection>& connection) const override;
 
 private:
   virtual void MarkAsApplied(const std::shared_ptr<pqxx::connection>& connection) const;
-  bool IsAlreadyApplied(const std::shared_ptr<pqxx::connection>& connection, const std::string& migration_id) const override;
+
+  [[nodiscard]] bool IsAlreadyApplied(
+    const std::shared_ptr<pqxx::connection>& connection,
+    const std::string& migration_id
+  ) const override;
 
 private:
   std::string migration_id_;
+  std::shared_ptr<IDbMigration> next_;
 };
 
 }

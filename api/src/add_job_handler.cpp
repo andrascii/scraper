@@ -7,8 +7,9 @@ AddJobHandler::AddJobHandler(std::shared_ptr<PgConnectionPool> pool)
 
 IHttpHandler::ExpectedResponse AddJobHandler::Handle(RequestType&& request) noexcept {
   const auto wrapper = pool_->Take();
+  request.body();
   (void)request;
-  return common::Unexpected<std::error_code>{std::error_code{}};
+  return tl::unexpected<std::error_code>{std::error_code{}};
   // url string
   // update_frequency number
   // parse_queries bool

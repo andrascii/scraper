@@ -6,7 +6,7 @@ namespace api {
 
 class Settings final {
  public:
-  static common::Expected<std::shared_ptr<Settings>, std::error_code> Read(
+  static tl::expected<std::shared_ptr<Settings>, std::error_code> Read(
     int argc,
     char** argv,
     const std::string& app_name,

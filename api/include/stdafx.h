@@ -91,5 +91,15 @@
 //
 #include <fmt/format.h>
 
+//
+// simdjson
+//
+#include <simdjson.h>
+
+//
+// nlohmann
+//
+#include <nlohmann/json.hpp>
+
 using namespace std::chrono_literals;
 using namespace std::string_literals;

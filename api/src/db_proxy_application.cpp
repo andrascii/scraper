@@ -9,16 +9,22 @@ namespace api {
 DbProxyApplication::DbProxyApplication(
   std::shared_ptr<Settings> settings,
   //std::unique_ptr<IMessagePublisher> publisher,
-  std::vector<std::unique_ptr<IMigrator>> migrators)
+  std::shared_ptr<IMigrationFactory> factory)
   : settings_{std::move(settings)},
     //publisher_{std::move(publisher)},
-    migrators_{std::move(migrators)},
+    migration_factory_{std::move(factory)},
+    pg_pool_{std::make_shared<PgConnectionPool>(settings_, 32)},
     ctx_{std::max<int>(static_cast<int>(std::thread::hardware_concurrency()), 1)} {}
 
 std::error_code DbProxyApplication::Start() {
-  for (const auto& migrator : migrators_) {
-    migrator->Apply();
+  const auto migration = migration_factory_->Create(IMigrationFactory::kScraper);
+
+  if (!migration) {
+    return migration.error();
   }
+
+  const auto wrapper = pg_pool_->Take();
+  (*migration)->ExecuteIfNeeded(wrapper.Connection());
 
   return StartHttpServer();
 }

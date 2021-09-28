@@ -33,6 +33,10 @@ Listener::Listener(boost::asio::io_context& io_context, boost::asio::ip::tcp::en
   }
 }
 
+Listener::~Listener() {
+  SPDLOG_INFO("destructed");
+}
+
 void Listener::Run() {
   DoAccept();
 }

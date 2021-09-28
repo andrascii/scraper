@@ -15,7 +15,7 @@ HttpHandlerRegistry::HandleRequest(PostHttpHandlerType type, IHttpHandler::Reque
 
   // change it to Bad Request response with HTML page
   SPDLOG_WARN("Requested unregistered POST handler");
-  return common::Unexpected<std::error_code>{MakeErrorCode(DbProxyError::kUndefinedPostHttpHandler)};
+  return tl::unexpected<std::error_code>{MakeErrorCode(Error::kUndefinedPostHttpHandler)};
 }
 
 IHttpHandler::ExpectedResponse
@@ -30,7 +30,7 @@ HttpHandlerRegistry::HandleRequest(GetHttpHandlerType type, IHttpHandler::Reques
 
   // change it to Bad Request response with HTML page
   SPDLOG_WARN("Requested unregistered POST handler");
-  return common::Unexpected<std::error_code>{MakeErrorCode(DbProxyError::kUndefinedGetHttpHandler)};
+  return tl::unexpected<std::error_code>{MakeErrorCode(Error::kUndefinedGetHttpHandler)};
 }
 
 void HttpHandlerRegistry::AddPostHandler(PostHttpHandlerType type, const std::shared_ptr<IHttpHandler>& handler) {

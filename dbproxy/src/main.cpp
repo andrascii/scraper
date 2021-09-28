@@ -2,7 +2,7 @@
 #include "settings.h"
 #include "exceptions.h"
 #include "kafka_publisher.h"
-#include "scraper_migrator.h"
+#include "migration_factory.h"
 
 namespace {
 
@@ -65,15 +65,10 @@ int main(int argc, char** argv) {
 
     common::Logger()->set_level(settings->LogLevel());
 
-    const auto pg_connection_pool = std::make_shared<api::PgConnectionPool>(settings, 32);
-
-    std::vector<std::unique_ptr<api::IMigrator>> migrators;
-    migrators.emplace_back(std::make_unique<api::ScraperMigrator>(settings, pg_connection_pool));
-
     api::DbProxyApplication app{
       settings,
       //std::make_unique<api::KafkaPublisher>(settings),
-      std::move(migrators)
+      std::make_shared<MigrationFactory>()
     };
 
     app_ptr = &app;

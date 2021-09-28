@@ -47,9 +47,9 @@ T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) 
   }
 
   try {
-    return  result[option.substr(0, comma_position)].as<T>();
+    return result[option.substr(0, comma_position)].as<T>();
   } catch (const std::exception& ex) {
-    return  result[option.substr(comma_position)].as<T>();
+    return result[option.substr(comma_position)].as<T>();
   }
 }
 
@@ -57,7 +57,7 @@ T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) 
 
 namespace api {
 
-common::Expected<std::shared_ptr<Settings>, std::error_code>
+tl::expected<std::shared_ptr<Settings>, std::error_code>
 Settings::Read(
   int argc,
   char** argv,
@@ -136,12 +136,12 @@ Settings::Read(
       throw std::runtime_error{"Invalid log level argument: " + log_level};
     }
 
-    return std::shared_ptr<Settings>{ new Settings{data } };
+    return std::shared_ptr<Settings>{ new Settings{data} };
   } catch (const HelpMessageRequested&) {
     throw;
   } catch (const std::exception& ex) {
     SPDLOG_ERROR("Error initializing settings: {:s}", ex.what());
-    return common::Unexpected<std::error_code>{ MakeErrorCode(DbProxyError::kCommandLineParsingError) };
+    return tl::unexpected<std::error_code>{ MakeErrorCode(Error::kCommandLineParsingError) };
   }
 }
 

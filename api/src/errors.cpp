@@ -11,18 +11,27 @@ public:
   }
 
   [[nodiscard]] std::string message(int code) const override {
-    switch (static_cast<DbProxyError>(code)) {
-      case DbProxyError::kCommandLineParsingError: {
+    switch (static_cast<Error>(code)) {
+      case Error::kCommandLineParsingError: {
         return "Command line parsing error";
       }
-      case DbProxyError::kHttpServerInitializationFailed: {
+      case Error::kHttpServerInitializationFailed: {
         return "HTTP server initialization failed";
       }
-      case DbProxyError::kUndefinedPostHttpHandler: {
+      case Error::kUndefinedPostHttpHandler: {
         return "Undefined POST HTTP handler type";
       }
-      case DbProxyError::kUndefinedGetHttpHandler: {
+      case Error::kUndefinedGetHttpHandler: {
         return "Undefined GET HTTP handler type";
+      }
+      case Error::kNotFoundTypeFieldInReceivedRequest: {
+        return "Not found 'type' field in the received HTTP request";
+      }
+      case Error::kUnknownTypeFieldValueInReceivedRequest: {
+        return "Received value of field 'type' is unknown";
+      }
+      case Error::kNotFoundAllRequiredFieldsInAddJobRequest: {
+        return "Not found all required fields in AddJobRequest JSON";
       }
       default: {
         return "Undefined error code";
@@ -35,7 +44,7 @@ public:
 
 namespace api {
 
-auto MakeErrorCode(DbProxyError code) noexcept -> std::error_code {
+auto MakeErrorCode(Error code) noexcept -> std::error_code {
   static auto category = DbProxyErrorCategory{};
   return std::error_code{ static_cast<int>(code), category };
 }

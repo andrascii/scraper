@@ -2,20 +2,23 @@
 
 namespace api {
 
-enum class DbProxyError {
+enum class Error {
   kCommandLineParsingError = 1,
   kHttpServerInitializationFailed,
   kUndefinedPostHttpHandler,
   kUndefinedGetHttpHandler,
+  kNotFoundTypeFieldInReceivedRequest,
+  kUnknownTypeFieldValueInReceivedRequest,
+  kNotFoundAllRequiredFieldsInAddJobRequest
 };
 
-auto MakeErrorCode(DbProxyError code) noexcept -> std::error_code;
+auto MakeErrorCode(Error code) noexcept -> std::error_code;
 auto MakeErrorCode(boost::system::error_code error) noexcept -> std::error_code;
 
 }
 
 namespace std {
 
-template <> struct is_error_code_enum<api::DbProxyError> : public true_type {};
+template <> struct is_error_code_enum<api::Error> : public true_type {};
 
 }
