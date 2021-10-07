@@ -2,8 +2,7 @@
 
 #if defined (USE_WINDOWS_SET_THREAD_NAME_HACK)
 
-namespace
-{
+namespace {
 
 #pragma pack(push,8)
 typedef struct tagTHREADNAME_INFO {

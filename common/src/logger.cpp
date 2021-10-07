@@ -5,23 +5,22 @@ namespace {
 constexpr auto kLogFileName{ "dbproxy.log" };
 
 struct DailyLogFileName final {
-  static spdlog::filename_t calc_filename(const spdlog::filename_t& filename, const tm& now_tm);
+  static spdlog::filename_t calc_filename(const spdlog::filename_t& filename, const tm& now_tm) {
+    using namespace spdlog;
+
+    filename_t basename, ext;
+    std::tie(basename, ext) = details::file_helper::split_by_extension(filename);
+
+    return fmt::format(
+      SPDLOG_FILENAME_T("{}.{:04d}{:02d}{:02d}{}"),
+      basename,
+      now_tm.tm_year + 1900u,
+      now_tm.tm_mon + 1u,
+      now_tm.tm_mday,
+      ext
+    );
+  }
 };
-
-spdlog::filename_t DailyLogFileName::calc_filename(const spdlog::filename_t& filename, const tm& now_tm) {
-  using namespace spdlog;
-
-  filename_t basename, ext;
-  std::tie(basename, ext) = details::file_helper::split_by_extension(filename);
-  return fmt::format(
-    SPDLOG_FILENAME_T("{}.{:04d}{:02d}{:02d}{}"),
-    basename,
-    now_tm.tm_year + 1900u,
-    now_tm.tm_mon + 1u,
-    now_tm.tm_mday,
-    ext
-  );
-}
 
 using DailyFileSink = spdlog::sinks::daily_file_sink<std::mutex, DailyLogFileName>;
 

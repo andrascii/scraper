@@ -25,9 +25,16 @@ inline void Expects(bool condition) {
 template <typename T>
 class NotNull {
  public:
-  using ReturnType = std::conditional_t<std::is_copy_constructible<T>::value, T, const T&>;
+  using ReturnType = std::conditional_t<
+    std::is_copy_constructible<T>::value,
+    T,
+    const T&
+  >;
 
-  static_assert(details::IsComparableToNullptr<T>::value, "T cannot be compared to nullptr.");
+  static_assert(
+    details::IsComparableToNullptr<T>::value,
+    "T cannot be compared to nullptr."
+  );
 
   NotNull(std::nullptr_t) = delete;
 
@@ -53,13 +60,21 @@ class NotNull {
     return pointer_;
   }
 
-  constexpr operator T() const { return Get(); }
-  constexpr decltype(auto) operator->() const { return Get(); }
-  constexpr decltype(auto) operator*() const { return *Get(); }
+  constexpr operator T() const {
+    return Get();
+  }
+
+  constexpr decltype(auto) operator->() const {
+    return Get();
+  }
+
+  constexpr decltype(auto) operator*() const {
+    return *Get();
+  }
 
   NotNull& operator=(std::nullptr_t) = delete;
 
-  // unwanted operators...pointers only point to single objects!
+  // pointers only point to single objects!
   NotNull& operator++() = delete;
   NotNull& operator--() = delete;
   NotNull operator++(int) = delete;

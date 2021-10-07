@@ -4,6 +4,9 @@
 
 namespace api {
 
+//
+// thread-safe
+//
 class HttpHandlerRegistry final : public IHttpHandlerRegistry {
  public:
   IHttpHandler::ExpectedResponse HandleRequest(PostHttpHandlerType type, IHttpHandler::RequestType&& request) const noexcept override;

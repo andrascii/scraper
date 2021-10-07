@@ -4,38 +4,38 @@
 
 namespace {
 
-constexpr auto kBrokerListOption{ "b,brokers" };
-constexpr auto kBrokerListOptionDescription{ "The Kafka server address" };
+constexpr auto kBrokerListOption{"b,brokers"};
+constexpr auto kBrokerListOptionDescription{"The Kafka server address"};
 
-constexpr auto kKafkaInputTopicOption{ "i,kafka-input-topic" };
-constexpr auto kKafkaInputTopicOptionDescription{ "The PostgreSQL Database name" };
+constexpr auto kKafkaInputTopicOption{"i,kafka-input-topic"};
+constexpr auto kKafkaInputTopicOptionDescription{"The PostgreSQL Database name"};
 
-constexpr auto kKafkaOutputTopicOption{ "o,kafka-output-topic" };
-constexpr auto kKafkaOutputTopicOptionDescription{ "The PostgreSQL Database name" };
+constexpr auto kKafkaOutputTopicOption{"o,kafka-output-topic"};
+constexpr auto kKafkaOutputTopicOptionDescription{"The PostgreSQL Database name"};
 
-constexpr auto kDbOption{ "d,database" };
-constexpr auto kDbOptionDescription{ "The PostgreSQL Database name" };
+constexpr auto kDbOption{"d,database"};
+constexpr auto kDbOptionDescription{"The PostgreSQL Database name"};
 
-constexpr auto kDbUserOption{ "u,dbuser" };
-constexpr auto kDbUserOptionDescription{ "The PostgreSQL Database user" };
+constexpr auto kDbUserOption{"u,dbuser"};
+constexpr auto kDbUserOptionDescription{"The PostgreSQL Database user"};
 
-constexpr auto kDbUserPasswordOption{ "dbpass" };
-constexpr auto kDbUserPasswordOptionDescription{ "The PostgreSQL Database password" };
+constexpr auto kDbUserPasswordOption{"dbpass"};
+constexpr auto kDbUserPasswordOptionDescription{"The PostgreSQL Database password"};
 
-constexpr auto kDbHostOption{ "h,host" };
-constexpr auto kDbHostOptionDescription{ "The PostgreSQL Database host" };
+constexpr auto kDbHostOption{"h,host"};
+constexpr auto kDbHostOptionDescription{"The PostgreSQL Database host"};
 
-constexpr auto kDbPortOption{ "dbport" };
-constexpr auto kDbPortOptionDescription{ "The PostgreSQL Database port" };
+constexpr auto kDbPortOption{"dbport"};
+constexpr auto kDbPortOptionDescription{"The PostgreSQL Database port"};
 
-constexpr auto kHttpPortOption{ "http-port" };
-constexpr auto kHttpPortOptionDescription{ "The HTTP port to listen" };
+constexpr auto kHttpPortOption{"http-port"};
+constexpr auto kHttpPortOptionDescription{"The HTTP port to listen"};
 
-constexpr auto kLogLevelOption{ "l,level" };
-constexpr auto kLogLevelOptionDescription{ "Specifies log level [trace/debug/info/warning/error/critical]" };
+constexpr auto kLogLevelOption{"l,level"};
+constexpr auto kLogLevelOptionDescription{"Specifies log level [trace/debug/info/warning/error/critical]"};
 
-constexpr auto kEnableConsoleOption{ "enable-console-logging" };
-constexpr auto kEnableConsoleOptionDescription{ "Enables console logging" };
+constexpr auto kEnableConsoleOption{"enable-console-logging"};
+constexpr auto kEnableConsoleOptionDescription{"Enables console logging"};
 
 template <typename T>
 T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) {
@@ -57,10 +57,9 @@ T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) 
 
 namespace api {
 
-tl::expected<std::shared_ptr<Settings>, std::error_code>
-Settings::Read(
+tl::expected<std::shared_ptr<Settings>, std::error_code> Settings::Read(
   int argc,
-  char** argv,
+  char **argv,
   const std::string& app_name,
   const std::string& app_description
 ) {
@@ -84,10 +83,10 @@ Settings::Read(
     const auto result = options.parse(argc, argv);
 
     if (result.count("help") > 0) {
-      throw HelpMessageRequested{ options.help() };
+      throw HelpMessageRequested{options.help()};
     }
 
-    const auto has_option = [&result](const std::string &option) -> bool {
+    const auto has_option = [&result](const std::string& option) -> bool {
       const auto comma_position = option.find(',');
       const auto is_composed_option = comma_position != std::string::npos;
 
@@ -136,12 +135,12 @@ Settings::Read(
       throw std::runtime_error{"Invalid log level argument: " + log_level};
     }
 
-    return std::shared_ptr<Settings>{ new Settings{data} };
+    return std::shared_ptr<Settings>{new Settings{data}};
   } catch (const HelpMessageRequested&) {
     throw;
   } catch (const std::exception& ex) {
     SPDLOG_ERROR("Error initializing settings: {:s}", ex.what());
-    return tl::unexpected<std::error_code>{ MakeErrorCode(Error::kCommandLineParsingError) };
+    return tl::unexpected<std::error_code>{MakeErrorCode(Error::kCommandLineParsingError)};
   }
 }
 
@@ -190,6 +189,6 @@ bool Settings::EnableConsoleLogging() const noexcept {
 }
 
 Settings::Settings(Data data)
-  : data_{ std::move(data) } {}
+  : data_{std::move(data)} {}
 
 }

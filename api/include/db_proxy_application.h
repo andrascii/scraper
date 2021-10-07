@@ -14,7 +14,8 @@ class DbProxyApplication : public IApplication {
   DbProxyApplication(
     std::shared_ptr<Settings> settings,
     //std::unique_ptr<IMessagePublisher> publisher,
-    std::shared_ptr<IMigrationFactory> factory);
+    std::shared_ptr<IMigrationFactory> factory
+  );
 
   std::error_code Start();
   void Stop() noexcept;
