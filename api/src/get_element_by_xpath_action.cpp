@@ -36,4 +36,8 @@ const std::string& GetElementByXpathAction::OutField() const noexcept {
   return out_field_;
 }
 
+void GetElementByXpathAction::Accept(IActionVisitor* visitor) const {
+  visitor->Visit(const_cast<GetElementByXpathAction*>(this));
+}
+
 }

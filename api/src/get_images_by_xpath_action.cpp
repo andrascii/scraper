@@ -29,4 +29,8 @@ const std::string& GetImagesByXpathAction::OutField() const {
   return out_field_;
 }
 
+void GetImagesByXpathAction::Accept(IActionVisitor* visitor) const {
+  visitor->Visit(const_cast<GetImagesByXpathAction*>(this));
+}
+
 }

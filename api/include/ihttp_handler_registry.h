@@ -20,16 +20,16 @@ enum class PostHttpHandlerType {
 };
 
 inline common::Expected<PostHttpHandlerType> ToPostHttpHandlerType(const std::string& name) noexcept {
-  if (boost::iequals(name, "add-crawl-job")) return PostHttpHandlerType::kAddCrawlJob;
-  if (boost::iequals(name, "remove-crawl-job")) return PostHttpHandlerType::kRemoveCrawlJob;
-  if (boost::iequals(name, "enable-crawl-job")) return PostHttpHandlerType::kEnableCrawlJob;
-  if (boost::iequals(name, "disable-crawl-job")) return PostHttpHandlerType::kDisableCrawlJob;
-  if (boost::iequals(name, "update-crawl-job")) return PostHttpHandlerType::kUpdateCrawlJob;
-  if (boost::iequals(name, "crawl-job-list")) return PostHttpHandlerType::kCrawlJobList;
-  if (boost::iequals(name, "add-report-job")) return PostHttpHandlerType::kAddReportJob;
-  if (boost::iequals(name, "remove-report-job")) return PostHttpHandlerType::kRemoveReportJob;
-  if (boost::iequals(name, "report-job-list")) return PostHttpHandlerType::kReportJobList;
-  if (boost::iequals(name, "get-report-results")) return PostHttpHandlerType::kGetReportResults;
+  if (boost::iequals(name, "add-crawl-job")) { return PostHttpHandlerType::kAddCrawlJob; }
+  if (boost::iequals(name, "remove-crawl-job")) { return PostHttpHandlerType::kRemoveCrawlJob; }
+  if (boost::iequals(name, "enable-crawl-job")) { return PostHttpHandlerType::kEnableCrawlJob; }
+  if (boost::iequals(name, "disable-crawl-job")) { return PostHttpHandlerType::kDisableCrawlJob; }
+  if (boost::iequals(name, "update-crawl-job")) { return PostHttpHandlerType::kUpdateCrawlJob; }
+  if (boost::iequals(name, "crawl-job-list")) { return PostHttpHandlerType::kCrawlJobList; }
+  if (boost::iequals(name, "add-report-job")) { return PostHttpHandlerType::kAddReportJob; }
+  if (boost::iequals(name, "remove-report-job")) { return PostHttpHandlerType::kRemoveReportJob; }
+  if (boost::iequals(name, "report-job-list")) { return PostHttpHandlerType::kReportJobList; }
+  if (boost::iequals(name, "get-report-results")) { return PostHttpHandlerType::kGetReportResults; }
   return common::Unexpected<>{MakeErrorCode(Error::kUndefinedPostHttpHandler)};
 }
 
@@ -61,7 +61,7 @@ inline common::Expected<PostHttpHandlerType> ToGetHttpHandlerType(const std::str
 }
 
 inline common::Expected<std::string> FromGetHttpHandlerType(GetHttpHandlerType type) {
-  return common::Unexpected<>{MakeErrorCode(Error::kUndefinedPostHttpHandler)};
+  return common::Unexpected<>{MakeErrorCode(Error::kUndefinedGetHttpHandler)};
 }
 
 //

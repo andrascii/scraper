@@ -9,6 +9,7 @@ class SetCookiesAction final : public IAction {
   explicit SetCookiesAction(const nlohmann::json& json);
   SetCookiesAction(std::string name, std::string value);
 
+  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
 
   [[nodiscard]] const std::string& Name() const;

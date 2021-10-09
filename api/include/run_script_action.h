@@ -9,6 +9,7 @@ class RunScriptAction final : public OptionalAction {
   explicit RunScriptAction(const nlohmann::json& json);
   RunScriptAction(bool optional, std::string script);
 
+  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
   [[nodiscard]] const std::string& Script() const;
 

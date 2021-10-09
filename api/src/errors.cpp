@@ -5,8 +5,8 @@ namespace {
 using namespace api;
 
 class DbProxyErrorCategory final : public std::error_category {
-public:
-  [[nodiscard]] const char* name() const noexcept override {
+ public:
+  [[nodiscard]] const char *name() const noexcept override {
     return "DbProxyErrorCategory";
   }
 
@@ -28,10 +28,16 @@ public:
         return "Not found 'type' field in the received HTTP request";
       }
       case Error::kUnknownTypeFieldValueInReceivedRequest: {
-        return "Received value of field 'type' is unknown";
+        return "Received 'type' field of unknown value";
       }
       case Error::kNotFoundAllRequiredFieldsInAddJobRequest: {
         return "Not found all required fields in AddJobRequest JSON";
+      }
+      case Error::kJsonIsNotAnArray: {
+        return "The JSON is expected to be an array";
+      }
+      case Error::kJsonIsNotAnObject: {
+        return "The JSON is expected to be an object";
       }
       default: {
         return "Undefined error code";
@@ -46,7 +52,7 @@ namespace api {
 
 auto MakeErrorCode(Error code) noexcept -> std::error_code {
   static auto category = DbProxyErrorCategory{};
-  return std::error_code{ static_cast<int>(code), category };
+  return std::error_code{static_cast<int>(code), category};
 }
 
 auto MakeErrorCode(boost::system::error_code error) noexcept -> std::error_code {
@@ -55,7 +61,7 @@ auto MakeErrorCode(boost::system::error_code error) noexcept -> std::error_code 
     explicit CategoryAdapter(const boost::system::error_category& category)
       : category_(category) {}
 
-    [[nodiscard]] const char* name() const noexcept override {
+    [[nodiscard]] const char *name() const noexcept override {
       return category_.name();
     }
 
@@ -68,9 +74,9 @@ auto MakeErrorCode(boost::system::error_code error) noexcept -> std::error_code 
   };
 
   static thread_local std::unordered_map<std::string, CategoryAdapter> name_to_category;
-  [[maybe_unused]] const auto& [iterator, is_inserted] = name_to_category.emplace(error.category().name(), error.category());
-  [[maybe_unused]] const auto& [key, value] = *iterator;
-  return std::error_code{ error.value(), value };
+  [[maybe_unused]] const auto&[iterator, is_inserted] = name_to_category.emplace(error.category().name(), error.category());
+  [[maybe_unused]] const auto&[key, value] = *iterator;
+  return std::error_code{error.value(), value};
 }
 
 }

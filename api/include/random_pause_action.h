@@ -11,6 +11,7 @@ class RandomPauseAction final : public OptionalAction {
   explicit RandomPauseAction(const nlohmann::json& json);
   RandomPauseAction(bool optional, const Ms& from, const Ms& to);
 
+  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
 
   [[nodiscard]] const Ms& FromMs() const noexcept;

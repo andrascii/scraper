@@ -22,4 +22,8 @@ const std::string& ClickElementAction::Xpath() const noexcept {
   return xpath_;
 }
 
+void ClickElementAction::Accept(IActionVisitor* visitor) const {
+  visitor->Visit(const_cast<ClickElementAction*>(this));
+}
+
 }

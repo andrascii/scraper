@@ -22,4 +22,8 @@ uint64_t KeyPressAction::KeyCode() const {
   return key_code_;
 }
 
+void KeyPressAction::Accept(IActionVisitor* visitor) const {
+  visitor->Visit(const_cast<KeyPressAction*>(this));
+}
+
 }

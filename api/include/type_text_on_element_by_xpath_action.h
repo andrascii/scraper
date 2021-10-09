@@ -9,6 +9,7 @@ class TypeTextOnElementByXpathAction final : public OptionalAction {
   explicit TypeTextOnElementByXpathAction(const nlohmann::json& json);
   TypeTextOnElementByXpathAction(bool optional, std::string text, std::string xpath);
 
+  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
 
   [[nodiscard]] const std::string& Text() const;

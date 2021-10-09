@@ -9,7 +9,9 @@ enum class Error {
   kUndefinedGetHttpHandler,
   kNotFoundTypeFieldInReceivedRequest,
   kUnknownTypeFieldValueInReceivedRequest,
-  kNotFoundAllRequiredFieldsInAddJobRequest
+  kNotFoundAllRequiredFieldsInAddJobRequest,
+  kJsonIsNotAnArray,
+  kJsonIsNotAnObject,
 };
 
 auto MakeErrorCode(Error code) noexcept -> std::error_code;

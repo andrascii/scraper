@@ -22,4 +22,8 @@ const std::string& RunScriptAction::Script() const {
   return script_;
 }
 
+void RunScriptAction::Accept(IActionVisitor* visitor) const {
+  visitor->Visit(const_cast<RunScriptAction*>(this));
+}
+
 }

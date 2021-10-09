@@ -11,7 +11,7 @@ class RequestParser final {
   using Actions = std::vector<std::shared_ptr<IAction>>;
   using ExpectedActions = common::Expected<Actions>;
 
-  ExpectedActions Parse(const IHttpHandler::RequestType& request) const noexcept;
+  static ExpectedActions Parse(const IHttpHandler::RequestType& request) noexcept;
 };
 
 }
