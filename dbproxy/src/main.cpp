@@ -3,6 +3,7 @@
 #include "exceptions.h"
 #include "kafka_publisher.h"
 #include "migration_factory.h"
+#include "http_handler_registry.h"
 
 namespace {
 
@@ -68,7 +69,8 @@ int main(int argc, char** argv) {
     api::DbProxyApplication app{
       settings,
       //std::make_unique<api::KafkaPublisher>(settings),
-      std::make_shared<MigrationFactory>()
+      std::make_shared<MigrationFactory>(),
+      std::make_shared<HttpHandlerRegistry>()
     };
 
     app_ptr = &app;

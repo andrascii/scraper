@@ -6,6 +6,7 @@
 #include "imessage_publisher.h"
 #include "imigration_factory.h"
 #include "pg_connection_pool.h"
+#include "ihttp_handler_registry.h"
 
 namespace api {
 
@@ -14,7 +15,8 @@ class DbProxyApplication : public IApplication {
   DbProxyApplication(
     std::shared_ptr<Settings> settings,
     //std::unique_ptr<IMessagePublisher> publisher,
-    std::shared_ptr<IMigrationFactory> factory
+    std::shared_ptr<IMigrationFactory> factory,
+    std::shared_ptr<IHttpHandlerRegistry> http_handler_registry
   );
 
   std::error_code Start();
@@ -28,6 +30,7 @@ class DbProxyApplication : public IApplication {
   std::unique_ptr<IMessagePublisher> publisher_;
   std::shared_ptr<IMigrationFactory> migration_factory_;
   std::shared_ptr<PgConnectionPool> pg_pool_;
+  std::shared_ptr<IHttpHandlerRegistry> http_handler_registry_;
   boost::asio::io_context ctx_;
 };
 

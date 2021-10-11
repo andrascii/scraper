@@ -7,12 +7,12 @@
 namespace api {
 
 enum class PostHttpHandlerType {
-  kAddCrawlJob,
-  kRemoveCrawlJob,
-  kEnableCrawlJob,
-  kDisableCrawlJob,
-  kUpdateCrawlJob,
-  kCrawlJobList,
+  kAddJob,
+  kRemoveJob,
+  kEnableJob,
+  kDisableJob,
+  kUpdateJob,
+  kJobList,
   kAddReportJob,
   kRemoveReportJob,
   kReportJobList,
@@ -20,12 +20,12 @@ enum class PostHttpHandlerType {
 };
 
 inline common::Expected<PostHttpHandlerType> ToPostHttpHandlerType(const std::string& name) noexcept {
-  if (boost::iequals(name, "add-crawl-job")) { return PostHttpHandlerType::kAddCrawlJob; }
-  if (boost::iequals(name, "remove-crawl-job")) { return PostHttpHandlerType::kRemoveCrawlJob; }
-  if (boost::iequals(name, "enable-crawl-job")) { return PostHttpHandlerType::kEnableCrawlJob; }
-  if (boost::iequals(name, "disable-crawl-job")) { return PostHttpHandlerType::kDisableCrawlJob; }
-  if (boost::iequals(name, "update-crawl-job")) { return PostHttpHandlerType::kUpdateCrawlJob; }
-  if (boost::iequals(name, "crawl-job-list")) { return PostHttpHandlerType::kCrawlJobList; }
+  if (boost::iequals(name, "add-job")) { return PostHttpHandlerType::kAddJob; }
+  if (boost::iequals(name, "remove-job")) { return PostHttpHandlerType::kRemoveJob; }
+  if (boost::iequals(name, "enable-job")) { return PostHttpHandlerType::kEnableJob; }
+  if (boost::iequals(name, "disable-job")) { return PostHttpHandlerType::kDisableJob; }
+  if (boost::iequals(name, "update-job")) { return PostHttpHandlerType::kUpdateJob; }
+  if (boost::iequals(name, "job-list")) { return PostHttpHandlerType::kJobList; }
   if (boost::iequals(name, "add-report-job")) { return PostHttpHandlerType::kAddReportJob; }
   if (boost::iequals(name, "remove-report-job")) { return PostHttpHandlerType::kRemoveReportJob; }
   if (boost::iequals(name, "report-job-list")) { return PostHttpHandlerType::kReportJobList; }
@@ -35,12 +35,12 @@ inline common::Expected<PostHttpHandlerType> ToPostHttpHandlerType(const std::st
 
 inline common::Expected<std::string> FromPostHttpHandlerType(PostHttpHandlerType type) {
   switch (type) {
-    case PostHttpHandlerType::kAddCrawlJob: return "add-crawl-job";
-    case PostHttpHandlerType::kRemoveCrawlJob: return "remove-crawl-job";
-    case PostHttpHandlerType::kEnableCrawlJob: return "enable-crawl-job";
-    case PostHttpHandlerType::kDisableCrawlJob: return "disable-crawl-job";
-    case PostHttpHandlerType::kUpdateCrawlJob: return "update-crawl-job";
-    case PostHttpHandlerType::kCrawlJobList: return "crawl-job-list";
+    case PostHttpHandlerType::kAddJob: return "add-job";
+    case PostHttpHandlerType::kRemoveJob: return "remove-job";
+    case PostHttpHandlerType::kEnableJob: return "enable-job";
+    case PostHttpHandlerType::kDisableJob: return "disable-job";
+    case PostHttpHandlerType::kUpdateJob: return "update-job";
+    case PostHttpHandlerType::kJobList: return "job-list";
     case PostHttpHandlerType::kAddReportJob: return "add-report-job";
     case PostHttpHandlerType::kRemoveReportJob: return "remove-report-job";
     case PostHttpHandlerType::kReportJobList: return "report-job-list";
@@ -71,8 +71,15 @@ class IHttpHandlerRegistry {
  public:
   virtual ~IHttpHandlerRegistry() = default;
 
-  virtual IHttpHandler::ExpectedResponse HandleRequest(PostHttpHandlerType type, IHttpHandler::RequestType&& request) const noexcept = 0;
-  virtual IHttpHandler::ExpectedResponse HandleRequest(GetHttpHandlerType type, IHttpHandler::RequestType&& request) const noexcept = 0;
+  virtual IHttpHandler::ExpectedResponse HandleRequest(
+    PostHttpHandlerType type,
+    IHttpHandler::RequestType&& request
+  ) const noexcept = 0;
+
+  virtual IHttpHandler::ExpectedResponse HandleRequest(
+    GetHttpHandlerType type,
+    IHttpHandler::RequestType&& request
+  ) const noexcept = 0;
 
   virtual void AddPostHandler(PostHttpHandlerType type, const std::shared_ptr<IHttpHandler>& handler) = 0;
   virtual void AddGetHandler(GetHttpHandlerType type, const std::shared_ptr<IHttpHandler>& handler) = 0;

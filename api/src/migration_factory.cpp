@@ -1,5 +1,4 @@
 #include "migration_factory.h"
-
 #include "alter_table_migration.h"
 #include "create_table_migration.h"
 #include "helpers.h"

@@ -4,12 +4,15 @@
 namespace api {
 
 IHttpHandler::ExpectedResponse
-HttpHandlerRegistry::HandleRequest(PostHttpHandlerType type, IHttpHandler::RequestType&& request) const noexcept {
+HttpHandlerRegistry::HandleRequest(
+  PostHttpHandlerType type,
+  IHttpHandler::RequestType&& request
+) const noexcept {
   std::lock_guard lk{mutex_};
   const auto it = post_handlers_.find(type);
 
   if (it != end(post_handlers_)) {
-    const auto& [key, value] = *it;
+    const auto&[key, value] = *it;
     return value->Handle(std::move(request));
   }
 
@@ -19,12 +22,15 @@ HttpHandlerRegistry::HandleRequest(PostHttpHandlerType type, IHttpHandler::Reque
 }
 
 IHttpHandler::ExpectedResponse
-HttpHandlerRegistry::HandleRequest(GetHttpHandlerType type, IHttpHandler::RequestType&& request) const noexcept {
+HttpHandlerRegistry::HandleRequest(
+  GetHttpHandlerType type,
+  IHttpHandler::RequestType&& request
+) const noexcept {
   std::lock_guard lk{mutex_};
   const auto it = get_handlers_.find(type);
 
   if (it != end(get_handlers_)) {
-    const auto& [key, value] = *it;
+    const auto&[key, value] = *it;
     return value->Handle(std::move(request));
   }
 

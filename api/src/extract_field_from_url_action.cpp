@@ -24,6 +24,7 @@ nlohmann::json ExtractFieldFromUrlAction::Serialize() const {
   json["uniqueId"] = unique_id_;
   json["regExp"] = reg_exp_;
   json["outField"] = out_field_;
+  json["type"] = ActionToString(ActionType::kExtractFieldFromUrl);
   json.update(OptionalAction::Serialize());
   return json;
 }

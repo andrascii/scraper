@@ -15,6 +15,7 @@ nlohmann::json SetCookiesAction::Serialize() const {
   nlohmann::json json;
   json["name"] = Name();
   json["value"] = Value();
+  json["type"] = ActionToString(ActionType::kSetCookies);
   return json;
 }
 

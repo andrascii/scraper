@@ -20,6 +20,7 @@ nlohmann::json GetElementByXpathAction::Serialize() const {
   json["uniqueId"] = unique_id_;
   json["xPath"] = xpath_;
   json["outField"] = out_field_;
+  json["type"] = ActionToString(ActionType::kGetElementByXpath);
   json.update(OptionalAction::Serialize());
   return json;
 }

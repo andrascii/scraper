@@ -9,6 +9,7 @@ class EmulateMouseMoveAction final : public OptionalAction {
   explicit EmulateMouseMoveAction(const nlohmann::json& json);
   explicit EmulateMouseMoveAction(bool is_optional);
 
+  nlohmann::json Serialize() const override;
   void Accept(IActionVisitor* visitor) const override;
 };
 

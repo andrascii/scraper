@@ -4,37 +4,37 @@
 
 namespace api {
 
-Listener::Listener(boost::asio::io_context& io_context, boost::asio::ip::tcp::endpoint endpoint)
-  : io_context_{io_context},
-    acceptor_{boost::asio::make_strand(io_context_)} {
+Listener::Listener(
+  boost::asio::io_context& io_context,
+  boost::asio::ip::tcp::endpoint endpoint,
+  std::shared_ptr<IHttpHandlerRegistry> http_handler_registry
+) : io_context_{io_context},
+    acceptor_{boost::asio::make_strand(io_context_)},
+    http_handler_registry_{std::move(http_handler_registry)} {
   boost::beast::error_code error;
   acceptor_.open(endpoint.protocol(), error);
 
   if (error) {
-    throw HttpServerInitializationError{ error.message() };
+    throw HttpServerInitializationError{error.message()};
   }
 
   acceptor_.set_option(boost::asio::socket_base::reuse_address(true), error);
 
   if (error) {
-    throw HttpServerInitializationError{ "Allowing address reuse error: " + error.message() };
+    throw HttpServerInitializationError{"Allowing address reuse error: " + error.message()};
   }
 
   acceptor_.bind(endpoint, error);
 
   if (error) {
-    throw HttpServerInitializationError{ "Bind error: " + error.message() };
+    throw HttpServerInitializationError{"Bind error: " + error.message()};
   }
 
   acceptor_.listen(boost::asio::socket_base::max_listen_connections, error);
 
   if (error) {
-    throw HttpServerInitializationError{ "Start listening error: " + error.message() };
+    throw HttpServerInitializationError{"Start listening error: " + error.message()};
   }
-}
-
-Listener::~Listener() {
-  SPDLOG_INFO("destructed");
 }
 
 void Listener::Run() {
@@ -49,11 +49,11 @@ void Listener::DoAccept() {
 }
 
 void Listener::OnAccept(boost::beast::error_code error, boost::asio::ip::tcp::socket socket) {
-  if(error) {
+  if (error) {
     SPDLOG_ERROR("Accept error: {:s}", error.message());
   } else {
     // Create the session and run it
-    std::make_shared<Session>(std::move(socket))->Run();
+    std::make_shared<Session>(std::move(socket), http_handler_registry_)->Run();
   }
 
   // Accept another connection

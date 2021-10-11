@@ -13,7 +13,8 @@ ClickElementAction::ClickElementAction(bool optional, std::string xpath)
 
 nlohmann::json ClickElementAction::Serialize() const {
   nlohmann::json json;
-  json["xPath"] = xpath_;
+  json["xPath"] = Xpath();
+  json["type"] = ActionToString(ActionType::kClickElement);
   json.update(OptionalAction::Serialize());
   return json;
 }

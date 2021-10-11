@@ -8,8 +8,16 @@ EmulateMouseMoveAction::EmulateMouseMoveAction(const nlohmann::json &json)
 EmulateMouseMoveAction::EmulateMouseMoveAction(bool is_optional)
   : OptionalAction{is_optional} {}
 
+nlohmann::json EmulateMouseMoveAction::Serialize() const {
+  nlohmann::json json;
+  json["type"] = ActionToString(ActionType::kEmulateMouseMove);
+  json.update(OptionalAction::Serialize());
+  return json;
+}
+
 void EmulateMouseMoveAction::Accept(IActionVisitor* visitor) const {
   visitor->Visit(const_cast<EmulateMouseMoveAction*>(this));
 }
+
 
 }

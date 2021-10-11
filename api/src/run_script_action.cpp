@@ -13,7 +13,8 @@ RunScriptAction::RunScriptAction(bool optional, std::string script)
 
 nlohmann::json RunScriptAction::Serialize() const {
   nlohmann::json json;
-  json["script"] = script_;
+  json["script"] = Script();
+  json["type"] = ActionToString(ActionType::kRunScript);
   json.update(OptionalAction::Serialize());
   return json;
 }

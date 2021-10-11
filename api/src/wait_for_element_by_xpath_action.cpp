@@ -9,12 +9,13 @@ WaitForElementByXpathAction::WaitForElementByXpathAction(const nlohmann::json& j
 
 WaitForElementByXpathAction::WaitForElementByXpathAction(std::string xpath, WaitForElementByXpathAction::Ms timeout)
   : xpath_{std::move(xpath)},
-    timeout_{std::move(timeout)} {}
+    timeout_{timeout} {}
 
 nlohmann::json WaitForElementByXpathAction::Serialize() const {
   nlohmann::json json;
   json["xPath"] = Xpath();
   json["maxTimeoutMsecs"] = Timeout().count();
+  json["type"] = ActionToString(ActionType::kWaitForElementByXpath);
   return json;
 }
 

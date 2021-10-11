@@ -32,6 +32,9 @@
 //
 // Boost
 //
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/version.hpp>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind/placeholders.hpp>
@@ -42,6 +45,7 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/positional_options.hpp>
+#include <boost/algorithm/string.hpp>
 
 //
 // Spdlog

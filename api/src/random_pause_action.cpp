@@ -26,8 +26,9 @@ RandomPauseAction::RandomPauseAction(
 
 nlohmann::json RandomPauseAction::Serialize() const {
   nlohmann::json json;
-  json["fromMs"] = from_.count();
-  json["toMs"] = to_.count();
+  json["fromMs"] = FromMs().count();
+  json["toMs"] = ToMs().count();
+  json["type"] = ActionToString(ActionType::kRandomPause);
   json.update(OptionalAction::Serialize());
   return json;
 }
