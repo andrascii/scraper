@@ -19,6 +19,8 @@ namespace {
 
 using namespace api;
 
+constexpr const char* kType = "add-job";
+
 std::shared_ptr<IAction> CreateAction(ActionType type, const nlohmann::json& json) {
   try {
     switch (type) {
@@ -93,6 +95,14 @@ IHttpHandler::ExpectedResponse AddJobHandler::Handle(IHttpHandler::RequestType&&
     if (!actions_json_array.is_array()) {
       return common::Unexpected<>{
         MakeErrorCode(Error::kJsonIsNotAnArray)
+      };
+    }
+
+    const auto type = json.at("type").get<std::string>();
+
+    if (type != kType) {
+      return common::Unexpected<>{
+        MakeErrorCode(Error::kInvalidTypeValue)
       };
     }
 
