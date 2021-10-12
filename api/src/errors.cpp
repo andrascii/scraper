@@ -39,6 +39,9 @@ class DbProxyErrorCategory final : public std::error_category {
       case Error::kJsonIsNotAnObject: {
         return "The JSON is expected to be an object";
       }
+      case Error::kInvalidTypeValue: {
+        return "Invalid type value";
+      }
       default: {
         return "Undefined error code";
       }

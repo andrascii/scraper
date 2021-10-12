@@ -12,6 +12,7 @@ enum class Error {
   kNotFoundAllRequiredFieldsInAddJobRequest,
   kJsonIsNotAnArray,
   kJsonIsNotAnObject,
+  kInvalidTypeValue,
 };
 
 auto MakeErrorCode(Error code) noexcept -> std::error_code;
