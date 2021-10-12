@@ -71,12 +71,13 @@ void Session::OnRead(error_code error, std::size_t bytes_transferred) {
     const auto expected_type = ToPostHttpHandlerType(handler_name);
 
     if (!expected_type) {
-      SPDLOG_WARN("not found requested HTTP handler: {}", handler_name);
+      const auto response = fmt::format("not found requested HTTP handler: {}", handler_name);
+      SPDLOG_WARN(response);
 
       lambda_(
         BadRequest(
           request_.version(),
-          "not found requested HTTP handler",
+          response,
           ContentType::kTextHtml
         ));
 

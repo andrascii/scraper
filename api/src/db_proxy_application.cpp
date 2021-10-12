@@ -5,6 +5,8 @@
 #include "kafka_publisher.h"
 #include "add_job_handler.h"
 #include "remove_job_handler.h"
+#include "enable_job_handler.h"
+#include "disable_job_handler.h"
 
 namespace api {
 
@@ -27,6 +29,16 @@ DbProxyApplication::DbProxyApplication(
   http_handler_registry_->AddPostHandler(
     PostHttpHandlerType::kRemoveJob,
     std::make_shared<RemoveJobHandler>(pg_pool_)
+  );
+
+  http_handler_registry_->AddPostHandler(
+    PostHttpHandlerType::kEnableJob,
+    std::make_shared<EnableJobHandler>(pg_pool_)
+  );
+
+  http_handler_registry_->AddPostHandler(
+    PostHttpHandlerType::kDisableJob,
+    std::make_shared<DisableJobHandler>(pg_pool_)
   );
 }
 
