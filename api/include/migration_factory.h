@@ -15,22 +15,11 @@ class MigrationFactory : public IMigrationFactory {
 
   [[nodiscard]] static ExpectedMigration ScraperMigration() noexcept;
   [[nodiscard]] static MigrationPointer InitialMigration();
-  [[nodiscard]] static MigrationPointer WebsitesTableMigration();
-  [[nodiscard]] static MigrationPointer ExtractionRulesTableMigration();
-  [[nodiscard]] static MigrationPointer UrlStoreTableMigration();
+  [[nodiscard]] static MigrationPointer JobsTableMigration();
+  [[nodiscard]] static MigrationPointer ActionsTableMigration();
   [[nodiscard]] static MigrationPointer LoadersTableMigration();
-  [[nodiscard]] static MigrationPointer WebsitesSitemapColumnsMigration();
-  [[nodiscard]] static MigrationPointer UrlStoreSitemapColumnsMigration();
-  [[nodiscard]] static MigrationPointer WebsitesEntryPointsColumnMigration();
-  [[nodiscard]] static MigrationPointer UrlStoreDropIsSitemapColumnMigration();
-  [[nodiscard]] static MigrationPointer UrlStoreTypeColumnsMigration();
-  [[nodiscard]] static MigrationPointer WebsitesPaginationNextXpathColumnMigration();
-  [[nodiscard]] static MigrationPointer UrlStoreUniquePathWithTypeMigration();
   [[nodiscard]] static MigrationPointer ReportJobsCreateTableMigration();
   [[nodiscard]] static MigrationPointer ReportResultsCreateTableMigration();
-  [[nodiscard]] static MigrationPointer WebsitesPaginationRulesColumnMigration();
-  [[nodiscard]] static MigrationPointer WebsitesDropPaginationNextXpathColumnMigration();
-  [[nodiscard]] static MigrationPointer WebsitesMatchMasksColumnMigration();
 };
 
 }

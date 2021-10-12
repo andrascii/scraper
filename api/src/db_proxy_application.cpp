@@ -32,7 +32,7 @@ std::error_code DbProxyApplication::Start() {
   }
 
   const auto wrapper = pg_pool_->Take();
-  (*migration)->ExecuteIfNeeded(wrapper.Connection());
+  (*migration)->ExecuteIfNeeded(wrapper.Get());
 
   return StartHttpServer();
 }

@@ -21,7 +21,7 @@ class PgConnectionPool final : public std::enable_shared_from_this<PgConnectionP
     ConnectionWrapper& operator=(const ConnectionWrapper& other) = delete;
     ~ConnectionWrapper();
 
-    [[nodiscard]] const std::shared_ptr<pqxx::connection>& Connection() const noexcept;
+    [[nodiscard]] const std::shared_ptr<pqxx::connection>& Get() const noexcept;
 
    private:
     Cleaner cleaner_;

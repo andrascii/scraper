@@ -11,17 +11,18 @@ PgConnectionPool::ConnectionWrapper::~ConnectionWrapper() {
   cleaner_(connection_);
 }
 
-const std::shared_ptr<pqxx::connection>& PgConnectionPool::ConnectionWrapper::Connection() const noexcept {
+const std::shared_ptr<pqxx::connection>& PgConnectionPool::ConnectionWrapper::Get() const noexcept {
   return connection_;
 }
 
-
 PgConnectionPool::PgConnectionPool(std::shared_ptr<Settings> settings, size_t connection_count)
   : settings_{std::move(settings)} {
-  for (auto i{ 0u }; i < connection_count; ++i) {
-    pool_.push_back(Descriptor{
-      .connection = PgConnectionFactory::Create(settings_)
-    });
+  for (auto i{0u}; i < connection_count; ++i) {
+    pool_.push_back(
+      Descriptor{
+        .connection = PgConnectionFactory::Create(settings_)
+      }
+    );
   }
 }
 
@@ -32,9 +33,11 @@ PgConnectionPool::ConnectionWrapper PgConnectionPool::Take() noexcept {
     return !connection.is_acquired;
   };
 
-  condition_.wait(lk, [&] {
-    return std::find_if(begin(pool_), end(pool_), predicate) != end(pool_);
-  });
+  condition_.wait(
+    lk, [&] {
+      return std::find_if(begin(pool_), end(pool_), predicate) != end(pool_);
+    }
+  );
 
   const auto iterator = std::find_if(begin(pool_), end(pool_), predicate);
   assert(iterator != end(pool_) && "Iterator always must be valid!");
