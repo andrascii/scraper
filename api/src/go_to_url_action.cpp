@@ -12,7 +12,7 @@ GoToUrlAction::GoToUrlAction(std::string url)
 nlohmann::json GoToUrlAction::Serialize() const {
   nlohmann::json json;
   json["url"] = Url();
-  json["type"] = ActionToString(ActionType::kGoToUrl);
+  json["type"] = ActionToString(Type::kGoToUrl);
   return json;
 }
 

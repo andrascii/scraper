@@ -10,7 +10,7 @@ EmulateMouseMoveAction::EmulateMouseMoveAction(bool is_optional)
 
 nlohmann::json EmulateMouseMoveAction::Serialize() const {
   nlohmann::json json;
-  json["type"] = ActionToString(ActionType::kEmulateMouseMove);
+  json["type"] = ActionToString(Type::kEmulateMouseMove);
   json.update(OptionalAction::Serialize());
   return json;
 }

@@ -1,16 +1,16 @@
 #pragma once
 
 #include "ihttp_handler.h"
-#include "iaction.h"
 #include "pg_connection_pool.h"
+#include "iaction.h"
 
 namespace api {
 
-class AddJobHandler : public IHttpHandler {
+class UpdateJobHandler final : public IHttpHandler {
  public:
   using Actions = std::vector<std::shared_ptr<IAction>>;
 
-  explicit AddJobHandler(std::shared_ptr<PgConnectionPool> pg_pool);
+  explicit UpdateJobHandler(std::shared_ptr<PgConnectionPool> pg_pool);
   ExpectedResponse Handle(RequestType&& request) noexcept override;
 
  private:

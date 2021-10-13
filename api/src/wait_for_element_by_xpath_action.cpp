@@ -15,7 +15,7 @@ nlohmann::json WaitForElementByXpathAction::Serialize() const {
   nlohmann::json json;
   json["xPath"] = Xpath();
   json["maxTimeoutMsecs"] = Timeout().count();
-  json["type"] = ActionToString(ActionType::kWaitForElementByXpath);
+  json["type"] = ActionToString(Type::kWaitForElementByXpath);
   return json;
 }
 

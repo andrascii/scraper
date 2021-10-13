@@ -17,7 +17,7 @@ nlohmann::json TypeTextOnElementByXpathAction::Serialize() const {
   nlohmann::json json;
   json["text"] = Text();
   json["xPath"] = Xpath();
-  json["type"] = ActionToString(ActionType::kTypeTextOnElementByXpath);
+  json["type"] = ActionToString(Type::kTypeTextOnElementByXpath);
   json.update(OptionalAction::Serialize());
   return json;
 }

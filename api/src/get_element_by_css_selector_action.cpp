@@ -24,7 +24,7 @@ nlohmann::json GetElementByCssSelectorAction::Serialize() const {
   json["uniqueId"] = unique_id_;
   json["selector"] = selector_;
   json["outField"] = out_field_;
-  json["type"] = ActionToString(ActionType::kGetElementByCssSelector);
+  json["type"] = ActionToString(Type::kGetElementByCssSelector);
   json.update(OptionalAction::Serialize());
   return json;
 }

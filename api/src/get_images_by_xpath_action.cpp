@@ -17,7 +17,7 @@ nlohmann::json GetImagesByXpathAction::Serialize() const {
   nlohmann::json json;
   json["xPath"] = xpath_;
   json["outField"] = out_field_;
-  json["type"] = ActionToString(ActionType::kGetImagesByXpath);
+  json["type"] = ActionToString(Type::kGetImagesByXpath);
   json.update(OptionalAction::Serialize());
   return json;
 }

@@ -1,31 +1,30 @@
-#include "add_job_handler.h"
+#include "update_job_handler.h"
 #include "errors.h"
-#include "http_response_misc.h"
 #include "action_factory.h"
+#include "http_response_misc.h"
 
 namespace {
 
-constexpr const char* kType = "add-job";
+constexpr const char* kType = "update-job";
 
 }
 
 namespace api {
 
-AddJobHandler::AddJobHandler(std::shared_ptr<PgConnectionPool> pg_pool)
+UpdateJobHandler::UpdateJobHandler(std::shared_ptr<PgConnectionPool> pg_pool)
   : pg_pool_{std::move(pg_pool)} {}
 
-IHttpHandler::ExpectedResponse AddJobHandler::Handle(IHttpHandler::RequestType&& request) noexcept {
+IHttpHandler::ExpectedResponse UpdateJobHandler::Handle(IHttpHandler::RequestType&& request) noexcept {
   const auto request_version = request.version();
 
   try {
+    auto actions = Actions{};
     const auto factory = ActionFactory{};
 
     const auto& body = request.body();
     const auto json = nlohmann::json::parse(body);
+    const auto job_id = json.at("id").get<uint64_t>();
     const auto update_frequency = json.at("updateFrequency").get<uint64_t>();
-
-    auto actions = Actions{};
-
     const auto actions_json_array = json.at("actions");
 
     if (!actions_json_array.is_array()) {
@@ -44,14 +43,8 @@ IHttpHandler::ExpectedResponse AddJobHandler::Handle(IHttpHandler::RequestType&&
 
     const auto connection = pg_pool_->Take();
     auto tx = pqxx::work{*connection.Get()};
-
-    const auto result = tx.exec_params(
-      "INSERT INTO jobs (update_frequency, enabled) VALUES ($1, $2) RETURNING id",
-      update_frequency,
-      true
-    );
-
-    const auto job_id = result[0][0].as<uint64_t>();
+    tx.exec_params("DELETE FROM actions WHERE job_id = $1", job_id);
+    tx.exec_params("UPDATE jobs SET update_frequency = $1 WHERE id = $2", update_frequency, job_id);
 
     for (const auto& object : actions_json_array) {
       if (!object.is_object()) {
