@@ -9,7 +9,6 @@ class GetImagesByXpathAction final : public OptionalAction {
   explicit GetImagesByXpathAction(const nlohmann::json& json);
   GetImagesByXpathAction(bool optional, std::string xpath, std::string out_field);
 
-  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
 
   [[nodiscard]] const std::string& Xpath() const;

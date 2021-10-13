@@ -41,8 +41,4 @@ const RandomPauseAction::Ms& RandomPauseAction::ToMs() const noexcept {
   return to_;
 }
 
-void RandomPauseAction::Accept(IActionVisitor* visitor) const {
-  visitor->Visit(const_cast<RandomPauseAction*>(this));
-}
-
 }

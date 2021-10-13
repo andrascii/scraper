@@ -15,7 +15,6 @@ class ExtractFieldFromUrlAction final : public OptionalAction {
     std::string out_field
   );
 
-  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
 
   [[nodiscard]] bool UniqueId() const noexcept;

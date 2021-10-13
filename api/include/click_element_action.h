@@ -9,7 +9,6 @@ class ClickElementAction final : public OptionalAction {
   explicit ClickElementAction(const nlohmann::json& json);
   ClickElementAction(bool _optional, std::string xpath);
 
-  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
   [[nodiscard]] const std::string& Xpath() const noexcept;
 

@@ -7,7 +7,6 @@ class GoToUrlAction final : public IAction {
   explicit GoToUrlAction(const nlohmann::json& json);
   explicit GoToUrlAction(std::string url);
 
-  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
   [[nodiscard]] const std::string& Url() const;
 

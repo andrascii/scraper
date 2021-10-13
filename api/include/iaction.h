@@ -1,6 +1,5 @@
 #pragma once
 
-#include "iaction_visitor.h"
 #include "helpers.h"
 #include "errors.h"
 
@@ -25,7 +24,6 @@ class IAction {
   };
 
   virtual ~IAction() = default;
-  virtual void Accept(IActionVisitor* visitor) const = 0;
   [[nodiscard]] virtual nlohmann::json Serialize() const = 0;
 };
 

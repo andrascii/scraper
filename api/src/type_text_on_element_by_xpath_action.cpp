@@ -30,8 +30,4 @@ const std::string& TypeTextOnElementByXpathAction::Xpath() const {
   return xpath_;
 }
 
-void TypeTextOnElementByXpathAction::Accept(IActionVisitor* visitor) const {
-  visitor->Visit(const_cast<TypeTextOnElementByXpathAction*>(this));
-}
-
 }

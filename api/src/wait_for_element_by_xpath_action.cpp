@@ -27,8 +27,4 @@ const WaitForElementByXpathAction::Ms& WaitForElementByXpathAction::Timeout() co
   return timeout_;
 }
 
-void WaitForElementByXpathAction::Accept(IActionVisitor *visitor) const {
-  visitor->Visit(const_cast<WaitForElementByXpathAction*>(this));
-}
-
 }

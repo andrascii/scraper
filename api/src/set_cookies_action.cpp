@@ -27,8 +27,4 @@ const std::string& SetCookiesAction::Value() const {
   return value_;
 }
 
-void SetCookiesAction::Accept(IActionVisitor* visitor) const {
-  visitor->Visit(const_cast<SetCookiesAction*>(this));
-}
-
 }

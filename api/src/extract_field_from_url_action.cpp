@@ -41,8 +41,4 @@ const std::string& ExtractFieldFromUrlAction::OutField() const noexcept {
   return out_field_;
 }
 
-void ExtractFieldFromUrlAction::Accept(IActionVisitor* visitor) const {
-  visitor->Visit(const_cast<ExtractFieldFromUrlAction*>(this));
-}
-
 }

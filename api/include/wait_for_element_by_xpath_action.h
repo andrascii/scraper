@@ -11,7 +11,6 @@ class WaitForElementByXpathAction final : public IAction {
   explicit WaitForElementByXpathAction(const nlohmann::json& json);
   WaitForElementByXpathAction(std::string xpath, Ms timeout);
 
-  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
 
   [[nodiscard]] const std::string& Xpath() const;

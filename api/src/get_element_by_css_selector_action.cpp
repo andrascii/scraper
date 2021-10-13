@@ -41,8 +41,4 @@ const std::string& GetElementByCssSelectorAction::OutField() const noexcept {
   return out_field_;
 }
 
-void GetElementByCssSelectorAction::Accept(IActionVisitor* visitor) const {
-  visitor->Visit(const_cast<GetElementByCssSelectorAction*>(this));
-}
-
 }// namespace api

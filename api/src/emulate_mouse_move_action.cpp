@@ -15,9 +15,4 @@ nlohmann::json EmulateMouseMoveAction::Serialize() const {
   return json;
 }
 
-void EmulateMouseMoveAction::Accept(IActionVisitor* visitor) const {
-  visitor->Visit(const_cast<EmulateMouseMoveAction*>(this));
-}
-
-
 }

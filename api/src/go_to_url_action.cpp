@@ -20,8 +20,4 @@ const std::string& GoToUrlAction::Url() const {
   return url_;
 }
 
-void GoToUrlAction::Accept(IActionVisitor* visitor) const {
-  visitor->Visit(const_cast<GoToUrlAction*>(this));
-}
-
 }

@@ -9,7 +9,6 @@ class KeyPressAction final : public OptionalAction {
   explicit KeyPressAction(const nlohmann::json& json);
   KeyPressAction(bool optional, uint64_t key_code);
 
-  void Accept(IActionVisitor* visitor) const override;
   [[nodiscard]] nlohmann::json Serialize() const override;
   [[nodiscard]] uint64_t KeyCode() const;
 
