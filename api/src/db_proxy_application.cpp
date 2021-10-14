@@ -8,6 +8,7 @@
 #include "enable_job_handler.h"
 #include "disable_job_handler.h"
 #include "update_job_handler.h"
+#include "job_list_handler.h"
 
 namespace api {
 
@@ -45,6 +46,11 @@ DbProxyApplication::DbProxyApplication(
   http_handler_registry_->AddPostHandler(
     PostHttpHandlerType::kUpdateJob,
     std::make_shared<UpdateJobHandler>(pg_pool_)
+  );
+
+  http_handler_registry_->AddPostHandler(
+    PostHttpHandlerType::kJobList,
+    std::make_shared<JobListHandler>(pg_pool_)
   );
 }
 

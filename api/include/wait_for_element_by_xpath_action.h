@@ -18,7 +18,7 @@ class WaitForElementByXpathAction final : public IAction {
 
  private:
   std::string xpath_;
-  Ms timeout_;
+  Ms timeout_{};
 };
 
 }

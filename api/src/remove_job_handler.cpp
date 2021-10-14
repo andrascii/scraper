@@ -35,9 +35,7 @@ IHttpHandler::ExpectedResponse RemoveJobHandler::Handle(IHttpHandler::RequestTyp
     }
 
     const auto job_id = json.at("id").get<uint64_t>();
-
     const auto connection = pg_pool_->Take();
-
     auto tx = pqxx::work{*connection.Get()};
     tx.exec_params("DELETE FROM actions WHERE job_id = $1", job_id);
     tx.exec_params("DELETE FROM jobs WHERE id = $1", job_id);
