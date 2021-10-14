@@ -1,3 +1,4 @@
+#!/bin/bash
 vcpkg install boost
 vcpkg install cppkafka
 vcpkg install gtest
@@ -9,5 +10,5 @@ vcpkg install cxxopts
 vcpkg install simdjson
 vcpkg install rdkafka
 vcpkg install fmt
-vcpkg install expected
+vcpkg install tl-expected
 vcpkg install nlohmann-json
