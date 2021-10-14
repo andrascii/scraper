@@ -14,7 +14,7 @@ namespace api {
 UpdateJobHandler::UpdateJobHandler(std::shared_ptr<PgConnectionPool> pg_pool)
   : pg_pool_{std::move(pg_pool)} {}
 
-IHttpHandler::ExpectedResponse UpdateJobHandler::Handle(IHttpHandler::RequestType&& request) noexcept {
+IHttpHandler::ExpectedResponse UpdateJobHandler::Handle(RequestType&& request) noexcept {
   const auto request_version = request.version();
 
   try {
