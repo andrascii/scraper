@@ -8,7 +8,6 @@ if (MSVC)
     /EHsc
     /MP
     /permissive-
-    /std:c++20
     /Zi
     /W4
     /WX
