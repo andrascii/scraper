@@ -81,13 +81,13 @@ find_package(nlohmann_json CONFIG REQUIRED)
 # project variables
 #
 set(CORE_LIB core)
-set(DB_PROXY_BIN dbproxy)
+set(DATASERVER_BIN dataserver)
 set(TESTS_BIN tests)
 set(COMMON_LIB common)
 
 add_subdirectory(${COMMON_LIB})
 add_subdirectory(${CORE_LIB})
-add_subdirectory(${DB_PROXY_BIN})
+add_subdirectory(${DATASERVER_BIN})
 
 if (BUILD_TESTS)
   enable_testing()

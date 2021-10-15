@@ -10,9 +10,9 @@
 
 namespace core {
 
-class DbProxyApplication : public IApplication {
+class Application : public IApplication {
  public:
-  DbProxyApplication(
+  Application(
     std::shared_ptr<Settings> settings,
     //std::unique_ptr<IMessagePublisher> publisher,
     std::shared_ptr<IMigrationFactory> factory,

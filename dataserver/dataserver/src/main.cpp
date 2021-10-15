@@ -9,7 +9,7 @@ namespace {
 
 using namespace core;
 
-DbProxyApplication* app_ptr;
+Application* app_ptr;
 
 std::string SignalToString(int signal) {
   switch(signal) {
@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 
     common::Logger()->set_level(settings->LogLevel());
 
-    core::DbProxyApplication app{
+    core::Application app{
       settings,
       //std::make_unique<core::KafkaPublisher>(settings),
       std::make_shared<MigrationFactory>(),

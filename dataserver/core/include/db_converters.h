@@ -18,17 +18,6 @@ constexpr const char* ToString(DatabaseColumnType type) noexcept {
   abort();
 }
 
-constexpr const char* ToString(LinkType type) noexcept {
-  switch (type) {
-    case LinkType::kCommon: return "common";
-    case LinkType::kSiteMap: return "sitemap";
-    case LinkType::kEntryPoint: return "entry_point";
-    case LinkType::kPagination: return "pagination";
-  }
-
-  abort();
-}
-
 inline std::string DefaultValueToPostgreSqlString(const DefaultValueType& value) {
   common::VariantVisitor visitor{
     [](std::monostate) {
@@ -55,11 +44,6 @@ inline std::string DefaultValueToPostgreSqlString(const DefaultValueType& value)
     },
     [](double value) {
       return std::to_string(value);
-    },
-    [](LinkType value) {
-      std::stringstream stream;
-      stream << std::quoted(ToString(value), '\'');
-      return stream.str();
     }
   };
 

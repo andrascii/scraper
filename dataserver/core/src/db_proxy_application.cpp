@@ -12,7 +12,7 @@
 
 namespace core {
 
-DbProxyApplication::DbProxyApplication(
+Application::Application(
   std::shared_ptr<Settings> settings,
   //std::unique_ptr<IMessagePublisher> publisher,
   std::shared_ptr<IMigrationFactory> factory,
@@ -54,7 +54,7 @@ DbProxyApplication::DbProxyApplication(
   );
 }
 
-std::error_code DbProxyApplication::Start() {
+std::error_code Application::Start() {
   const auto migration = migration_factory_->Create(IMigrationFactory::kScraper);
 
   if (!migration) {
@@ -67,12 +67,12 @@ std::error_code DbProxyApplication::Start() {
   return StartHttpServer();
 }
 
-void DbProxyApplication::Stop() noexcept {
+void Application::Stop() noexcept {
   SPDLOG_INFO("Stopping application...");
   ctx_.stop();
 }
 
-std::error_code DbProxyApplication::StartHttpServer() {
+std::error_code Application::StartHttpServer() {
   const auto thread_count = std::max<int>(static_cast<int>(std::thread::hardware_concurrency()), 1);
   const auto address = boost::asio::ip::make_address("0.0.0.0");
   const auto port = uint16_t{settings_->HttpPort()};

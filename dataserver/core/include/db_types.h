@@ -12,15 +12,8 @@ enum class DatabaseColumnType {
   kVarChar256,
 };
 
-enum class LinkType {
-  kCommon,
-  kSiteMap,
-  kEntryPoint,
-  kPagination,
-};
-
 struct NullType {};
-inline NullType Null;
+constexpr NullType kNull;
 
 using DefaultValueType = std::variant<
   std::monostate, // used to indicate that the variant has no value
@@ -29,8 +22,7 @@ using DefaultValueType = std::variant<
   std::string,
   int64_t,
   uint64_t,
-  double,
-  LinkType
+  double
 >;
 
 struct UniqueKey {
