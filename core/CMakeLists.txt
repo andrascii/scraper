@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(THIS_TARGET_NAME ${DB_PROXY_BIN})
+set(THIS_TARGET_NAME ${CORE_LIB})
 project(${THIS_TARGET_NAME})
 
 #
@@ -17,28 +17,22 @@ set(PRECOMPILED_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/stdafx.h")
 #
 # deps include directories
 #
-list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/${CORE_LIB}/include")
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/${COMMON_LIB}/include")
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${INCLUDES_DIR}")
 list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${Boost_INCLUDE_DIRS}")
+list(APPEND ADDITIONAL_INCLUDE_DIRECTORIES "${CPPKAFKA_INCLUDES}")
 
 #
-# target deps
+# deps
 #
-list(APPEND DEPS ${CORE_LIB})
+list(APPEND DEPS ${EVENT_LIB})
+list(APPEND DEPS ${ECHO_LIB})
 list(APPEND DEPS ${COMMON_LIB})
 list(APPEND DEPS ${Boost_LIBRARIES})
-list(APPEND DEPS ${CPPKAFKA_LIBRARY})
 list(APPEND DEPS spdlog::spdlog)
 list(APPEND DEPS cxxopts::cxxopts)
-list(APPEND DEPS PostgreSQL::PostgreSQL)
 list(APPEND DEPS libpqxx::pqxx)
 list(APPEND DEPS simdjson::simdjson)
-list(APPEND DEPS RdKafka::rdkafka)
-list(APPEND DEPS RdKafka::rdkafka++)
-list(APPEND DEPS OpenSSL::SSL)
-list(APPEND DEPS OpenSSL::Crypto)
-list(APPEND DEPS fmt::fmt)
 list(APPEND DEPS tl::expected)
 list(APPEND DEPS nlohmann_json)
 list(APPEND DEPS nlohmann_json::nlohmann_json)
@@ -57,7 +51,7 @@ source_group("Precompiled Headers" FILES ${PRECOMPILED_HEADER})
 #
 # creating target
 #
-add_executable(${THIS_TARGET_NAME} ${HEADERS_LIST} ${SOURCES_LIST})
+add_library(${THIS_TARGET_NAME} STATIC ${HEADERS_LIST} ${SOURCES_LIST})
 
 #
 # adding include directories to created target
@@ -73,3 +67,14 @@ target_precompile_headers(${THIS_TARGET_NAME} PRIVATE ${PRECOMPILED_HEADER})
 # linking this target with other targets
 #
 target_link_libraries(${THIS_TARGET_NAME} PRIVATE ${DEPS})
+
+#
+# creating sanitized version of this target to check UB
+#
+make_static_library_sanitized_target(
+  TARGET_NAME ${THIS_TARGET_NAME}_sanitized
+  SOURCES ${SOURCES_LIST}
+  HEADERS ${HEADERS_LIST}
+  DEPS ${DEPS}
+  PRECOMPILED_HEADER ${PRECOMPILED_HEADER}
+)

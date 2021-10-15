@@ -7,7 +7,7 @@
 
 namespace {
 
-using namespace api;
+using namespace core;
 
 DbProxyApplication* app_ptr;
 
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
       return EXIT_FAILURE;
     }
 
-    const auto expected_settings = api::Settings::Read(
+    const auto expected_settings = core::Settings::Read(
       argc,
       argv,
       "DbProxy",
@@ -66,9 +66,9 @@ int main(int argc, char** argv) {
 
     common::Logger()->set_level(settings->LogLevel());
 
-    api::DbProxyApplication app{
+    core::DbProxyApplication app{
       settings,
-      //std::make_unique<api::KafkaPublisher>(settings),
+      //std::make_unique<core::KafkaPublisher>(settings),
       std::make_shared<MigrationFactory>(),
       std::make_shared<HttpHandlerRegistry>()
     };
@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
     }
 
     return EXIT_SUCCESS;
-  } catch (const api::HelpMessageRequested& ex) {
+  } catch (const core::HelpMessageRequested& ex) {
     std::cout << ex.what() << std::endl;
   } catch (const std::exception& ex) {
     SPDLOG_CRITICAL("Application critical error: {:s}", ex.what());

@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 option(USE_CLANG "Enables using clang as a compiler" ON)
 option(BUILD_TESTS "Enables building tests project" OFF)
 
@@ -76,13 +80,13 @@ find_package(nlohmann_json CONFIG REQUIRED)
 #
 # project variables
 #
-set(API_LIB api)
+set(CORE_LIB core)
 set(DB_PROXY_BIN dbproxy)
 set(TESTS_BIN tests)
 set(COMMON_LIB common)
 
 add_subdirectory(${COMMON_LIB})
-add_subdirectory(${API_LIB})
+add_subdirectory(${CORE_LIB})
 add_subdirectory(${DB_PROXY_BIN})
 
 if (BUILD_TESTS)
