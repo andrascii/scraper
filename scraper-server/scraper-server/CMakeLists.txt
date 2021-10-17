@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(THIS_TARGET_NAME ${DATASERVER_BIN})
+set(THIS_TARGET_NAME ${SCRAPER_SERVER_BIN})
 project(${THIS_TARGET_NAME})
 
 #

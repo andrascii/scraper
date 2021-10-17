@@ -1,0 +1,84 @@
+# Use the official image as a parent image.
+FROM centos:centos7
+
+ENV container docker
+
+# Set the working directory.
+WORKDIR /scraper-server
+
+# Copy the rest of your app's source code from your host to your image filesystem.
+COPY . .
+
+# scraper-server works on 13337 port
+EXPOSE 13337
+
+# git
+#RUN yum -y install https://packages.endpoint.com/rhel/7/os/x86_64/endpoint-repo-1.9-1.x86_64.rpm
+#RUN yum -y install git
+
+# install C++ compiler
+RUN yum -y install centos-release-scl
+RUN yum -y install devtoolset-7
+RUN echo "source scl_source enable devtoolset-7" > ~/.bashrc
+
+# install dependencies to build vcpkg
+RUN yum -y install curl zip unzip tar
+
+# install vcpkg
+#RUN git clone https://github.com/Microsoft/vcpkg.git && \
+#source scl_source enable devtoolset-7 && \
+#./vcpkg/bootstrap-vcpkg.sh
+
+# install scraper-server dependencies through vcpkg
+#RUN chmod +x /scraper-server/scripts/vcpkg-init-scripts/vcpkg-init-unix.sh && \
+#export PATH="/scraper-server/vcpkg:$PATH" && \
+#/scraper-server/scripts/vcpkg-init-scripts/vcpkg-init-unix.sh
+
+RUN source scl_source enable devtoolset-7 && \
+yum -y install boost && \
+yum -y install cppkafka && \
+yum -y install gtest && \
+yum -y install spdlog && \
+yum -y install openssl && \
+yum -y install postgresql && \
+yum -y install libpqxx && \
+yum -y install cxxopts && \
+yum -y install simdjson && \
+yum -y install rdkafka && \
+yum -y install fmt && \
+yum -y install tl-expected && \
+yum -y install nlohmann-json
+
+# install cmake
+RUN yum -y install wget && \
+wget https://cmake.org/files/v3.12/cmake-3.12.3.tar.gz && \
+tar zxvf cmake-3.* && \
+cd cmake-3.12.3 && ./bootstrap --prefix=/usr/local && \
+make -j$(nproc) && \
+make install && \
+cd ..
+
+# building scraper-server
+RUN export PATH="/scraper-server/cmake-3.12.3/bin/cmake:$PATH" && \
+cmake -B build -DUSE_CLANG=OFF -DBUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/scraper-server/vcpkg/scripts/buildsystems/vcpkg.cmake && \
+cmake --build build -j$(nproc)
+
+# installing .service file for our sraper-server service
+RUN cat /scraper-server/docker/scraper-server.service >> /etc/systemd/system/scraper-server.service
+
+# https://hub.docker.com/_/centos/
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
+systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/*;\
+rm -f /etc/systemd/system/*.wants/*;\
+rm -f /lib/systemd/system/local-fs.target.wants/*; \
+rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+rm -f /lib/systemd/system/basic.target.wants/*;\
+rm -f /lib/systemd/system/anaconda.target.wants/*;
+
+VOLUME [ "/sys/fs/cgroup" ]
+
+RUN systemctl enable scraper-server
+
+CMD [ "/usr/sbin/init" ]

@@ -64,7 +64,7 @@ find_library(
 select_library_configurations(CPPKAFKA)
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS thread program_options REQUIRED)
+find_package(Boost COMPONENTS program_options REQUIRED)
 find_package(GTest REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -81,13 +81,13 @@ find_package(nlohmann_json CONFIG REQUIRED)
 # project variables
 #
 set(CORE_LIB core)
-set(DATASERVER_BIN dataserver)
+set(SCRAPER_SERVER_BIN scraper-server)
 set(TESTS_BIN tests)
 set(COMMON_LIB common)
 
 add_subdirectory(${COMMON_LIB})
 add_subdirectory(${CORE_LIB})
-add_subdirectory(${DATASERVER_BIN})
+add_subdirectory(${SCRAPER_SERVER_BIN})
 
 if (BUILD_TESTS)
   enable_testing()

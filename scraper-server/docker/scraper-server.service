@@ -1,0 +1,16 @@
+[Unit]
+Description=scraper-server service of scraper project. Represents HTTP layer between database and WEB applications.
+After=network.target
+
+[Service]
+WorkingDirectory=/scraper-server
+Type=simple
+ExecStart=/scraper-server/build/scraper-server --enable-console-logging -l trace --dbuser postgres --dbpass postgres -h postgres --dbport 5433
+TimeoutStartSec=5
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=scraper-server
+
+[Install]
+WantedBy=default.target
