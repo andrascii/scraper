@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "module": "ES6",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "preserveConstEnums": true,
+    "resolveJsonModule": true,
+    "rootDir": "./src",
+    "outDir": "build",
+    "strict": true,
+    "stripInternal": true,
+    "target": "es6",
+    "sourceMap": true,
+    "jsx": "react",
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "exclude": [
+    "build",
+    "node_modules"
+  ],
+  "modules": [
+    "es2016",
+    "es5"
+  ]
+}

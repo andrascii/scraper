@@ -73,3 +73,22 @@ target_precompile_headers(${THIS_TARGET_NAME} PRIVATE ${PRECOMPILED_HEADER})
 # linking this target with other targets
 #
 target_link_libraries(${THIS_TARGET_NAME} PRIVATE ${DEPS})
+
+#install(
+#  TARGETS ${THIS_TARGET_NAME}
+#  BUNDLE DESTINATION . COMPONENT Runtime
+#  RUNTIME DESTINATION bin COMPONENT Runtime
+#)
+
+# Note Mac specific extension .app
+#set(APPS "\${CMAKE_INSTALL_PREFIX}/${APP_NAME}.app")
+
+# Directories to look for dependencies
+#set(DIRS ${CMAKE_BINARY_DIR})
+
+#install(CODE "include(BundleUtilities) fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")")
+
+#set(CPACK_GENERATOR "DragNDrop")
+#include(CPack)
+
+install(TARGETS ${THIS_TARGET_NAME})
