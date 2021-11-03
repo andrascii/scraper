@@ -6,6 +6,7 @@ namespace core {
 
 class RandomPauseAction final : public OptionalAction {
  public:
+
   using Ms = std::chrono::milliseconds;
 
   explicit RandomPauseAction(const nlohmann::json& json);
@@ -17,8 +18,9 @@ class RandomPauseAction final : public OptionalAction {
   [[nodiscard]] const Ms& ToMs() const noexcept;
 
  private:
+
   Ms from_;
   Ms to_;
 };
 
-}
+}// namespace core

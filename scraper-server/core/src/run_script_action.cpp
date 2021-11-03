@@ -3,13 +3,11 @@
 namespace core {
 
 RunScriptAction::RunScriptAction(const nlohmann::json& json)
-  : OptionalAction(json) {
-  script_ = json.at("script").get<std::string>();
-}
+    : OptionalAction(json) { script_ = json.at("script").get<std::string>(); }
 
 RunScriptAction::RunScriptAction(bool optional, std::string script)
-  : OptionalAction{optional},
-    script_{std::move(script)} {}
+    : OptionalAction{optional},
+      script_{std::move(script)} {}
 
 nlohmann::json RunScriptAction::Serialize() const {
   nlohmann::json json;
@@ -19,8 +17,6 @@ nlohmann::json RunScriptAction::Serialize() const {
   return json;
 }
 
-const std::string& RunScriptAction::Script() const {
-  return script_;
-}
+const std::string& RunScriptAction::Script() const { return script_; }
 
-}
+}// namespace core

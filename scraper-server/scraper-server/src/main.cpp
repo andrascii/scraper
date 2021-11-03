@@ -1,9 +1,9 @@
 #include "db_proxy_application.h"
-#include "settings.h"
 #include "exceptions.h"
+#include "http_handler_registry.h"
 #include "kafka_publisher.h"
 #include "migration_factory.h"
-#include "http_handler_registry.h"
+#include "settings.h"
 
 namespace {
 
@@ -12,14 +12,28 @@ using namespace core;
 Application* app_ptr;
 
 std::string SignalToString(int signal) {
-  switch(signal) {
-    case SIGTERM: return "SIGTERM";
-    case SIGSEGV: return "SIGSEGV";
-    case SIGINT: return "SIGINT";
-    case SIGILL: return "SIGILL";
-    case SIGABRT: return "SIGABRT";
-    case SIGFPE: return "SIGFPE";
-    default: return std::to_string(signal);
+  switch (signal) {
+    case SIGTERM: {
+      return "SIGTERM";
+    }
+    case SIGSEGV: {
+      return "SIGSEGV";
+    }
+    case SIGINT: {
+      return "SIGINT";
+    }
+    case SIGILL: {
+      return "SIGILL";
+    }
+    case SIGABRT: {
+      return "SIGABRT";
+    }
+    case SIGFPE: {
+      return "SIGFPE";
+    }
+    default: {
+      return std::to_string(signal);
+    }
   }
 }
 
@@ -36,7 +50,7 @@ void OnAboutInterruptProcess(int signal) {
   SPDLOG_INFO("Application stopped");
 }
 
-}
+}// namespace
 
 int main(int argc, char** argv) {
   try {
@@ -49,8 +63,7 @@ int main(int argc, char** argv) {
       argc,
       argv,
       "DbProxy",
-      "DbProxy app"
-    );
+      "DbProxy app");
 
     if (!expected_settings) {
       SPDLOG_CRITICAL("{:s}", expected_settings.error().message());
@@ -70,8 +83,7 @@ int main(int argc, char** argv) {
       settings,
       //std::make_unique<core::KafkaPublisher>(settings),
       std::make_shared<MigrationFactory>(),
-      std::make_shared<HttpHandlerRegistry>()
-    };
+      std::make_shared<HttpHandlerRegistry>()};
 
     app_ptr = &app;
     signal(SIGINT, OnAboutInterruptProcess);
@@ -91,4 +103,3 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 }
-

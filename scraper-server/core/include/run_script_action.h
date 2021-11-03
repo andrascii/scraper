@@ -6,6 +6,7 @@ namespace core {
 
 class RunScriptAction final : public OptionalAction {
  public:
+
   explicit RunScriptAction(const nlohmann::json& json);
   RunScriptAction(bool optional, std::string script);
 
@@ -13,7 +14,8 @@ class RunScriptAction final : public OptionalAction {
   [[nodiscard]] const std::string& Script() const;
 
  private:
+
   std::string script_;
 };
 
-}
+}// namespace core

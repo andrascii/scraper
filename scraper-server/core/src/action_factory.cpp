@@ -1,4 +1,5 @@
 #include "action_factory.h"
+
 #include "click_element_action.h"
 #include "emulate_mouse_move_action.h"
 #include "extract_field_from_url_action.h"
@@ -67,4 +68,4 @@ std::shared_ptr<IAction> ActionFactory::Create(IAction::Type type, const nlohman
   }
 }
 
-}
+}// namespace core

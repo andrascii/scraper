@@ -2,6 +2,8 @@
 
 namespace common {
 
+struct NotNullContractViolation : std::runtime_error {};
+
 namespace details {
 
 template <typename T, typename = void>
@@ -12,13 +14,23 @@ struct IsComparableToNullptr<
   T,
   std::enable_if_t<std::is_convertible<decltype(std::declval<T>() != nullptr), bool>::value>> : std::true_type {};
 
-inline void Expects(bool condition) {
-  if (condition) {
-    return;
-  }
+#if defined(NN_THROW_ON_CONTRACT)
+  inline void Expects(bool condition) {
+    if (condition) {
+      return;
+    }
 
-  std::terminate();
-}
+    throw NotNullContractViolation{"Contract violation"};
+  }
+#else
+  inline void Expects(bool condition) {
+    if (condition) {
+      return;
+    }
+
+    std::terminate();
+  }
+#endif
 
 }
 

@@ -1,24 +1,20 @@
 #include "session.h"
+
 #include "http_response_misc.h"
 
 namespace core {
 
-Session::Session(
-  ba::ip::tcp::socket&& socket,
-  std::shared_ptr<IHttpHandlerRegistry> http_handler_registry
-) : stream_{std::move(socket)},
-    lambda_{*this},
-    http_handler_registry_{std::move(http_handler_registry)} {}
+Session::Session(ba::ip::tcp::socket&& socket, std::shared_ptr<IHttpHandlerRegistry> http_handler_registry)
+    : stream_{std::move(socket)},
+      lambda_{*this},
+      http_handler_registry_{std::move(http_handler_registry)} {}
 
 void Session::Run() {
   // We need to be executing within a strand to perform async operations
   // on the I/O objects in this session. Although not strictly necessary
   // for single-threaded contexts, this example code is written to be
   // thread-safe by default.
-  dispatch(
-    stream_.get_executor(),
-    bind_front_handler(&Session::DoRead, shared_from_this())
-  );
+  dispatch(stream_.get_executor(), bind_front_handler(&Session::DoRead, shared_from_this()));
 }
 
 void Session::DoRead() {
@@ -30,12 +26,7 @@ void Session::DoRead() {
   stream_.expires_after(30s);
 
   // Read a request
-  async_read(
-    stream_,
-    buffer_,
-    request_,
-    bind_front_handler(&Session::OnRead, shared_from_this())
-  );
+  async_read(stream_, buffer_, request_, bind_front_handler(&Session::OnRead, shared_from_this()));
 
   SPDLOG_TRACE("Reading request...");
 }
@@ -53,10 +44,7 @@ void Session::OnRead(error_code error, std::size_t bytes_transferred) {
     return;
   }
 
-  SPDLOG_TRACE(
-    "incoming HTTP request: {}",
-    request_
-  );
+  SPDLOG_TRACE("incoming HTTP request: {}", request_);
 
   const auto header = request_.base();
   const auto method = header.method();
@@ -74,12 +62,7 @@ void Session::OnRead(error_code error, std::size_t bytes_transferred) {
       const auto response = fmt::format("not found requested HTTP handler: {}", handler_name);
       SPDLOG_WARN(response);
 
-      lambda_(
-        BadRequest(
-          request_.version(),
-          response,
-          ContentType::kTextHtml
-        ));
+      lambda_(BadRequest(request_.version(), response, ContentType::kTextHtml));
 
       return;
     }
@@ -87,23 +70,13 @@ void Session::OnRead(error_code error, std::size_t bytes_transferred) {
     auto expected_response = http_handler_registry_->HandleRequest(*expected_type, std::move(request_));
 
     if (!expected_response) {
-      lambda_(
-        BadRequest(
-          request_version,
-          expected_response.error().message(),
-          ContentType::kTextPlain
-        ));
+      lambda_(BadRequest(request_version, expected_response.error().message(), ContentType::kTextPlain));
     } else {
       lambda_(std::move(*expected_response));
     }
   } else {
     SPDLOG_WARN("request with unsupported HTTP method: {}", method_string);
-    lambda_(
-      BadRequest(
-        request_version,
-        "Unsupported HTTP method",
-        ContentType::kTextHtml
-      ));
+    lambda_(BadRequest(request_version, "Unsupported HTTP method", ContentType::kTextHtml));
   }
 }
 
@@ -140,4 +113,4 @@ void Session::DoClose() {
   // At this point the connection is closed gracefully
 }
 
-}
+}// namespace core

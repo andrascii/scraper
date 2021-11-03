@@ -6,9 +6,8 @@ using namespace core;
 
 class DbProxyErrorCategory final : public std::error_category {
  public:
-  [[nodiscard]] const char *name() const noexcept override {
-    return "DbProxyErrorCategory";
-  }
+
+  [[nodiscard]] const char* name() const noexcept override { return "DbProxyErrorCategory"; }
 
   [[nodiscard]] std::string message(int code) const override {
     switch (static_cast<Error>(code)) {
@@ -49,7 +48,7 @@ class DbProxyErrorCategory final : public std::error_category {
   }
 };
 
-}
+}// namespace
 
 namespace core {
 
@@ -61,25 +60,22 @@ auto MakeErrorCode(Error code) noexcept -> std::error_code {
 auto MakeErrorCode(boost::system::error_code error) noexcept -> std::error_code {
   class CategoryAdapter final : public std::error_category {
    public:
-    explicit CategoryAdapter(const boost::system::error_category& category)
-      : category_(category) {}
 
-    [[nodiscard]] const char *name() const noexcept override {
-      return category_.name();
-    }
+    explicit CategoryAdapter(const boost::system::error_category& category) : category_(category) {}
 
-    [[nodiscard]] std::string message(int code) const override {
-      return category_.message(code);
-    }
+    [[nodiscard]] const char* name() const noexcept override { return category_.name(); }
+
+    [[nodiscard]] std::string message(int code) const override { return category_.message(code); }
 
    private:
+
     const boost::system::error_category& category_;
   };
 
   static thread_local std::unordered_map<std::string, CategoryAdapter> name_to_category;
-  [[maybe_unused]] const auto&[iterator, is_inserted] = name_to_category.emplace(error.category().name(), error.category());
-  [[maybe_unused]] const auto&[key, value] = *iterator;
+  [[maybe_unused]] const auto& [iterator, is_inserted] = name_to_category.emplace(error.category().name(), error.category());
+  [[maybe_unused]] const auto& [key, value] = *iterator;
   return std::error_code{error.value(), value};
 }
 
-}
+}// namespace core

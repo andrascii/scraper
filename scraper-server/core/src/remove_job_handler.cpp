@@ -1,4 +1,5 @@
 #include "remove_job_handler.h"
+
 #include "errors.h"
 #include "http_response_misc.h"
 
@@ -10,8 +11,7 @@ constexpr const char* kType = "remove-job";
 
 namespace core {
 
-RemoveJobHandler::RemoveJobHandler(std::shared_ptr<PgConnectionPool> pg_pool)
-  : pg_pool_{std::move(pg_pool)} {}
+RemoveJobHandler::RemoveJobHandler(std::shared_ptr<PgConnectionPool> pg_pool) : pg_pool_{std::move(pg_pool)} {}
 
 IHttpHandler::ExpectedResponse RemoveJobHandler::Handle(IHttpHandler::RequestType&& request) noexcept {
   const auto request_version = request.version();
@@ -21,17 +21,13 @@ IHttpHandler::ExpectedResponse RemoveJobHandler::Handle(IHttpHandler::RequestTyp
     const auto json = nlohmann::json::parse(body);
 
     if (!json.is_object()) {
-      return common::Unexpected<>{
-        MakeErrorCode(Error::kJsonIsNotAnObject)
-      };
+      return common::Unexpected<>{MakeErrorCode(Error::kJsonIsNotAnObject)};
     }
 
     const auto type = json.at("type").get<std::string>();
 
     if (type != kType) {
-      return common::Unexpected<>{
-        MakeErrorCode(Error::kInvalidTypeValue)
-      };
+      return common::Unexpected<>{MakeErrorCode(Error::kInvalidTypeValue)};
     }
 
     const auto job_id = json.at("id").get<uint64_t>();
@@ -44,12 +40,8 @@ IHttpHandler::ExpectedResponse RemoveJobHandler::Handle(IHttpHandler::RequestTyp
     return Ok(request_version, "Job successfully removed", ContentType::kTextPlain);
   } catch (const std::exception& ex) {
     SPDLOG_ERROR("{:s}", ex.what());
-    return BadRequest(
-      request_version,
-      ex.what(),
-      ContentType::kTextPlain
-    );
+    return BadRequest(request_version, ex.what(), ContentType::kTextPlain);
   }
 }
 
-}
+}// namespace core

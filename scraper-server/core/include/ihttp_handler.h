@@ -9,6 +9,7 @@ namespace core {
 //
 class IHttpHandler {
  public:
+
   using RequestType = boost::beast::http::request<boost::beast::http::string_body>;
   using ResponseType = boost::beast::http::response<boost::beast::http::string_body>;
   using ExpectedResponse = common::Expected<IHttpHandler::ResponseType>;
@@ -18,4 +19,4 @@ class IHttpHandler {
   virtual ExpectedResponse Handle(RequestType&& request) noexcept = 0;
 };
 
-}
+}// namespace core

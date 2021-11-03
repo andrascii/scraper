@@ -7,6 +7,7 @@ namespace core {
 
 class AbstractDbMigration : public IDbMigration {
  public:
+
   explicit AbstractDbMigration(std::string migration_id);
 
   const std::shared_ptr<IDbMigration>& AddNext(const std::shared_ptr<IDbMigration>& migration) override;
@@ -14,16 +15,15 @@ class AbstractDbMigration : public IDbMigration {
   void ExecuteIfNeeded(const std::shared_ptr<pqxx::connection>& connection) const override;
 
  private:
+
   virtual void MarkAsApplied(const std::shared_ptr<pqxx::connection>& connection) const;
 
-  [[nodiscard]] bool IsAlreadyApplied(
-    const std::shared_ptr<pqxx::connection>& connection,
-    const std::string& migration_id
-  ) const override;
+  [[nodiscard]] bool IsAlreadyApplied(const std::shared_ptr<pqxx::connection>& connection, const std::string& migration_id) const override;
 
  private:
+
   std::string migration_id_;
   std::shared_ptr<IDbMigration> next_;
 };
 
-}
+}// namespace core

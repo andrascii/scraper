@@ -1,16 +1,14 @@
 #include "listener.h"
+
 #include "exceptions.h"
 #include "session.h"
 
 namespace core {
 
-Listener::Listener(
-  boost::asio::io_context& io_context,
-  boost::asio::ip::tcp::endpoint endpoint,
-  std::shared_ptr<IHttpHandlerRegistry> http_handler_registry
-) : io_context_{io_context},
-    acceptor_{boost::asio::make_strand(io_context_)},
-    http_handler_registry_{std::move(http_handler_registry)} {
+Listener::Listener(boost::asio::io_context& io_context, boost::asio::ip::tcp::endpoint endpoint, std::shared_ptr<IHttpHandlerRegistry> http_handler_registry)
+    : io_context_{io_context},
+      acceptor_{boost::asio::make_strand(io_context_)},
+      http_handler_registry_{std::move(http_handler_registry)} {
   boost::beast::error_code error;
   acceptor_.open(endpoint.protocol(), error);
 
@@ -37,15 +35,10 @@ Listener::Listener(
   }
 }
 
-void Listener::Run() {
-  DoAccept();
-}
+void Listener::Run() { DoAccept(); }
 
 void Listener::DoAccept() {
-  acceptor_.async_accept(
-    boost::asio::make_strand(io_context_),
-    boost::beast::bind_front_handler(&Listener::OnAccept, shared_from_this())
-  );
+  acceptor_.async_accept(boost::asio::make_strand(io_context_), boost::beast::bind_front_handler(&Listener::OnAccept, shared_from_this()));
 }
 
 void Listener::OnAccept(boost::beast::error_code error, boost::asio::ip::tcp::socket socket) {
@@ -60,4 +53,4 @@ void Listener::OnAccept(boost::beast::error_code error, boost::asio::ip::tcp::so
   DoAccept();
 }
 
-}
+}// namespace core

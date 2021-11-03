@@ -39,7 +39,7 @@ list(APPEND DEPS GTest::gtest_main)
 #
 # collecting sources and headers
 #
-aux_source_directory(${SOURCES_DIR} SOURCES_LIST)
+file(GLOB_RECURSE SOURCES_LIST "${SOURCES_DIR}/*.cpp")
 file(GLOB_RECURSE HEADERS_LIST "${INCLUDES_DIR}/*.h")
 
 #
@@ -85,7 +85,7 @@ list(APPEND TESTS_SANITIZED_DEPS ${API_LIB}_sanitized)
 # creating sanitized version of this target to check UB
 #
 make_executable_sanitized_target(
-  TARGET_NAME ${THIS_TARGET_NAME}_sanitized
+  TARGET_NAME ${THIS_TARGET_NAME}-sanitized
   SOURCES ${SOURCES_LIST}
   HEADERS ${HEADERS_LIST}
   DEPS ${TESTS_SANITIZED_DEPS}
@@ -96,3 +96,8 @@ make_executable_sanitized_target(
 # register test cases added by gtest (to start them - run 'test' target)
 #
 gtest_discover_tests(${THIS_TARGET_NAME})
+
+register_for_clang_format(
+  TARGET_NAME ${THIS_TARGET_NAME}
+  SOURCES_LIST ${HEADERS_LIST} ${SOURCES_LIST}
+)

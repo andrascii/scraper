@@ -2,12 +2,9 @@
 
 namespace core {
 
-GoToUrlAction::GoToUrlAction(const nlohmann::json& json) {
-  url_ = json.at("url").get<std::string>();
-}
+GoToUrlAction::GoToUrlAction(const nlohmann::json& json) { url_ = json.at("url").get<std::string>(); }
 
-GoToUrlAction::GoToUrlAction(std::string url)
-  : url_{std::move(url)} {}
+GoToUrlAction::GoToUrlAction(std::string url) : url_{std::move(url)} {}
 
 nlohmann::json GoToUrlAction::Serialize() const {
   nlohmann::json json;
@@ -16,8 +13,6 @@ nlohmann::json GoToUrlAction::Serialize() const {
   return json;
 }
 
-const std::string& GoToUrlAction::Url() const {
-  return url_;
-}
+const std::string& GoToUrlAction::Url() const { return url_; }
 
-}
+}// namespace core

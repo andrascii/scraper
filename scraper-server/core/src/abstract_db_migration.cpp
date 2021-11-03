@@ -2,17 +2,14 @@
 
 namespace core {
 
-AbstractDbMigration::AbstractDbMigration(std::string migration_id)
-  : migration_id_{std::move(migration_id)} {}
+AbstractDbMigration::AbstractDbMigration(std::string migration_id) : migration_id_{std::move(migration_id)} {}
 
 const std::shared_ptr<IDbMigration>& AbstractDbMigration::AddNext(const std::shared_ptr<IDbMigration>& migration) {
   next_ = migration;
   return next_;
 }
 
-const std::string& AbstractDbMigration::MigrationId() const noexcept {
-  return migration_id_;
-}
+const std::string& AbstractDbMigration::MigrationId() const noexcept { return migration_id_; }
 
 void AbstractDbMigration::ExecuteIfNeeded(const std::shared_ptr<pqxx::connection>& connection) const {
   SPDLOG_INFO("applying {:s} migration", std::quoted(migration_id_));
@@ -58,4 +55,4 @@ bool AbstractDbMigration::IsAlreadyApplied(const std::shared_ptr<pqxx::connectio
   }
 }
 
-}
+}// namespace core

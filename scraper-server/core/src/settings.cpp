@@ -1,4 +1,5 @@
 #include "settings.h"
+
 #include "errors.h"
 #include "exceptions.h"
 
@@ -53,32 +54,15 @@ T GetOptionValue(const cxxopts::ParseResult& result, const std::string& option) 
   }
 }
 
-}
+}// namespace
 
 namespace core {
 
-tl::expected<std::shared_ptr<Settings>, std::error_code> Settings::Read(
-  int argc,
-  char **argv,
-  const std::string& app_name,
-  const std::string& app_description
-) {
+tl::expected<std::shared_ptr<Settings>, std::error_code> Settings::Read(int argc, char** argv, const std::string& app_name, const std::string& app_description) {
   try {
     cxxopts::Options options{app_name, app_description};
 
-    options.add_options()
-      (kBrokerListOption, kBrokerListOptionDescription, cxxopts::value<std::string>()->default_value("localhost:9092"))
-      (kKafkaInputTopicOption, kKafkaInputTopicOptionDescription, cxxopts::value<std::string>()->default_value("crawl-page-result"))
-      (kKafkaOutputTopicOption, kKafkaOutputTopicOptionDescription, cxxopts::value<std::string>()->default_value("crawl-queue"))
-      (kDbOption, kDbOptionDescription, cxxopts::value<std::string>()->default_value("scraper"))
-      (kDbUserOption, kDbUserOptionDescription, cxxopts::value<std::string>()->default_value("postgres"))
-      (kDbUserPasswordOption, kDbUserPasswordOptionDescription, cxxopts::value<std::string>()->default_value("postgres"))
-      (kDbHostOption, kDbHostOptionDescription, cxxopts::value<std::string>()->default_value("localhost"))
-      (kDbPortOption, kDbPortOptionDescription, cxxopts::value<uint16_t>()->default_value("5432"))
-      (kHttpPortOption, kHttpPortOptionDescription, cxxopts::value<uint16_t>()->default_value("13337"))
-      (kLogLevelOption, kLogLevelOptionDescription, cxxopts::value<std::string>()->default_value("info"))
-      ("help", "Prints this help message")
-      (kEnableConsoleOption, kEnableConsoleOptionDescription);
+    options.add_options()(kBrokerListOption, kBrokerListOptionDescription, cxxopts::value<std::string>()->default_value("localhost:9092"))(kKafkaInputTopicOption, kKafkaInputTopicOptionDescription, cxxopts::value<std::string>()->default_value("crawl-page-result"))(kKafkaOutputTopicOption, kKafkaOutputTopicOptionDescription, cxxopts::value<std::string>()->default_value("crawl-queue"))(kDbOption, kDbOptionDescription, cxxopts::value<std::string>()->default_value("scraper"))(kDbUserOption, kDbUserOptionDescription, cxxopts::value<std::string>()->default_value("postgres"))(kDbUserPasswordOption, kDbUserPasswordOptionDescription, cxxopts::value<std::string>()->default_value("postgres"))(kDbHostOption, kDbHostOptionDescription, cxxopts::value<std::string>()->default_value("localhost"))(kDbPortOption, kDbPortOptionDescription, cxxopts::value<uint16_t>()->default_value("5432"))(kHttpPortOption, kHttpPortOptionDescription, cxxopts::value<uint16_t>()->default_value("13337"))(kLogLevelOption, kLogLevelOptionDescription, cxxopts::value<std::string>()->default_value("info"))("help", "Prints this help message")(kEnableConsoleOption, kEnableConsoleOptionDescription);
 
     const auto result = options.parse(argc, argv);
 
@@ -144,51 +128,28 @@ tl::expected<std::shared_ptr<Settings>, std::error_code> Settings::Read(
   }
 }
 
-std::string Settings::KafkaBrokerList() const noexcept {
-  return data_.kafka_broker_list;
-}
+std::string Settings::KafkaBrokerList() const noexcept { return data_.kafka_broker_list; }
 
-std::string Settings::KafkaInputTopic() const noexcept {
-  return data_.kafka_input_topic;
-}
+std::string Settings::KafkaInputTopic() const noexcept { return data_.kafka_input_topic; }
 
-std::string Settings::KafkaOutputTopic() const noexcept {
-  return data_.kafka_output_topic;
-}
+std::string Settings::KafkaOutputTopic() const noexcept { return data_.kafka_output_topic; }
 
-std::string Settings::Database() const noexcept {
-  return data_.database;
-}
+std::string Settings::Database() const noexcept { return data_.database; }
 
-std::string Settings::DatabaseUser() const noexcept {
-  return data_.database_user;
-}
+std::string Settings::DatabaseUser() const noexcept { return data_.database_user; }
 
-std::string Settings::DatabasePassword() const noexcept {
-  return data_.database_password;
-}
+std::string Settings::DatabasePassword() const noexcept { return data_.database_password; }
 
-std::string Settings::DatabaseHost() const noexcept {
-  return data_.database_host;
-}
+std::string Settings::DatabaseHost() const noexcept { return data_.database_host; }
 
-uint16_t Settings::DatabasePort() const noexcept {
-  return data_.database_port;
-}
+uint16_t Settings::DatabasePort() const noexcept { return data_.database_port; }
 
-uint16_t Settings::HttpPort() const noexcept {
-  return data_.http_port;
-}
+uint16_t Settings::HttpPort() const noexcept { return data_.http_port; }
 
-spdlog::level::level_enum Settings::LogLevel() const noexcept {
-  return data_.log_level;
-}
+spdlog::level::level_enum Settings::LogLevel() const noexcept { return data_.log_level; }
 
-bool Settings::EnableConsoleLogging() const noexcept {
-  return data_.enable_console_logging;
-}
+bool Settings::EnableConsoleLogging() const noexcept { return data_.enable_console_logging; }
 
-Settings::Settings(Data data)
-  : data_{std::move(data)} {}
+Settings::Settings(Data data) : data_{std::move(data)} {}
 
-}
+}// namespace core

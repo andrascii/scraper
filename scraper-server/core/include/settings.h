@@ -6,12 +6,8 @@ namespace core {
 
 class Settings final {
  public:
-  static tl::expected<std::shared_ptr<Settings>, std::error_code> Read(
-    int argc,
-    char** argv,
-    const std::string& app_name,
-    const std::string& app_description
-  );
+
+  static tl::expected<std::shared_ptr<Settings>, std::error_code> Read(int argc, char** argv, const std::string& app_name, const std::string& app_description);
 
   //
   // Kafka settings
@@ -41,6 +37,7 @@ class Settings final {
   [[nodiscard]] bool EnableConsoleLogging() const noexcept;
 
  private:
+
   struct Data {
     std::string kafka_broker_list;
     std::string kafka_input_topic;
@@ -51,14 +48,15 @@ class Settings final {
     std::string database_host;
     uint16_t database_port;
     uint16_t http_port;
-    bool enable_console_logging{ false };
-    spdlog::level::level_enum log_level{ spdlog::level::info };
+    bool enable_console_logging{false};
+    spdlog::level::level_enum log_level{spdlog::level::info};
   };
 
   explicit Settings(Data data);
 
  private:
+
   Data data_;
 };
 
-}
+}// namespace core

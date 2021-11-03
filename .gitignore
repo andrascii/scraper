@@ -40,3 +40,4 @@ clionbuild
 build-release
 build-debug
 node_modules
+xcodebuild

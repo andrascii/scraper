@@ -9,14 +9,13 @@ namespace bb = boost::beast;
 
 class Session : public std::enable_shared_from_this<Session> {
  public:
-  Session(
-    ba::ip::tcp::socket&& socket,
-    std::shared_ptr<IHttpHandlerRegistry> http_handler_registry
-  );
+
+  Session(ba::ip::tcp::socket&& socket, std::shared_ptr<IHttpHandlerRegistry> http_handler_registry);
 
   void Run();
 
  private:
+
   void DoRead();
   void OnRead(bb::error_code error, std::size_t bytes_transferred);
 
@@ -24,6 +23,7 @@ class Session : public std::enable_shared_from_this<Session> {
   void DoClose();
 
  private:
+
   // This is the C++11 equivalent of a generic lambda.
   // The function object is used to send an HTTP message.
   struct SendLambda {
@@ -43,10 +43,7 @@ class Session : public std::enable_shared_from_this<Session> {
       self_.response_ = sp;
 
       // Write the response
-      async_write(
-        self_.stream_,
-        *sp,
-        bb::bind_front_handler(&Session::OnWrite, self_.shared_from_this(), sp->need_eof()));
+      async_write(self_.stream_, *sp, bb::bind_front_handler(&Session::OnWrite, self_.shared_from_this(), sp->need_eof()));
 
       SPDLOG_TRACE("Sending response...");
     }
@@ -60,4 +57,4 @@ class Session : public std::enable_shared_from_this<Session> {
   std::shared_ptr<IHttpHandlerRegistry> http_handler_registry_;
 };
 
-}
+}// namespace core

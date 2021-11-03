@@ -7,9 +7,8 @@ SetCookiesAction::SetCookiesAction(const nlohmann::json& json) {
   value_ = json.at("value").get<std::string>();
 }
 
-SetCookiesAction::SetCookiesAction(std::string name, std::string value)
-  : name_{std::move(name)},
-    value_{std::move(value)} {}
+SetCookiesAction::SetCookiesAction(std::string name, std::string value) : name_{std::move(name)},
+                                                                          value_{std::move(value)} {}
 
 nlohmann::json SetCookiesAction::Serialize() const {
   nlohmann::json json;
@@ -19,12 +18,8 @@ nlohmann::json SetCookiesAction::Serialize() const {
   return json;
 }
 
-const std::string& SetCookiesAction::Name() const {
-  return name_;
-}
+const std::string& SetCookiesAction::Name() const { return name_; }
 
-const std::string& SetCookiesAction::Value() const {
-  return value_;
-}
+const std::string& SetCookiesAction::Value() const { return value_; }
 
-}
+}// namespace core

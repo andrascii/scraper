@@ -1,6 +1,7 @@
 #include "update_job_handler.h"
-#include "errors.h"
+
 #include "action_factory.h"
+#include "errors.h"
 #include "http_response_misc.h"
 
 namespace {
@@ -11,8 +12,7 @@ constexpr const char* kType = "update-job";
 
 namespace core {
 
-UpdateJobHandler::UpdateJobHandler(std::shared_ptr<PgConnectionPool> pg_pool)
-  : pg_pool_{std::move(pg_pool)} {}
+UpdateJobHandler::UpdateJobHandler(std::shared_ptr<PgConnectionPool> pg_pool) : pg_pool_{std::move(pg_pool)} {}
 
 IHttpHandler::ExpectedResponse UpdateJobHandler::Handle(RequestType&& request) noexcept {
   const auto request_version = request.version();
@@ -28,17 +28,13 @@ IHttpHandler::ExpectedResponse UpdateJobHandler::Handle(RequestType&& request) n
     const auto actions_json_array = json.at("actions");
 
     if (!actions_json_array.is_array()) {
-      return common::Unexpected<>{
-        MakeErrorCode(Error::kJsonIsNotAnArray)
-      };
+      return common::Unexpected<>{MakeErrorCode(Error::kJsonIsNotAnArray)};
     }
 
     const auto type = json.at("type").get<std::string>();
 
     if (type != kType) {
-      return common::Unexpected<>{
-        MakeErrorCode(Error::kInvalidTypeValue)
-      };
+      return common::Unexpected<>{MakeErrorCode(Error::kInvalidTypeValue)};
     }
 
     const auto connection = pg_pool_->Take();
@@ -48,15 +44,11 @@ IHttpHandler::ExpectedResponse UpdateJobHandler::Handle(RequestType&& request) n
 
     for (const auto& object : actions_json_array) {
       if (!object.is_object()) {
-        return common::Unexpected<>{
-          MakeErrorCode(Error::kJsonIsNotAnObject)
-        };
+        return common::Unexpected<>{MakeErrorCode(Error::kJsonIsNotAnObject)};
       }
 
       if (!object.contains("type")) {
-        return common::Unexpected<>{
-          MakeErrorCode(Error::kNotFoundTypeFieldInReceivedRequest)
-        };
+        return common::Unexpected<>{MakeErrorCode(Error::kNotFoundTypeFieldInReceivedRequest)};
       }
 
       const auto action_type_str = object.at("type").get<std::string>();
@@ -65,11 +57,7 @@ IHttpHandler::ExpectedResponse UpdateJobHandler::Handle(RequestType&& request) n
       if (!expected_type) {
         SPDLOG_ERROR("Undefined action type: {}", action_type_str);
 
-        return BadRequest(
-          request_version,
-          expected_type.error().message(),
-          ContentType::kTextPlain
-        );
+        return BadRequest(request_version, expected_type.error().message(), ContentType::kTextPlain);
       }
 
       actions.push_back(factory.Create(*expected_type, object));
@@ -86,12 +74,8 @@ IHttpHandler::ExpectedResponse UpdateJobHandler::Handle(RequestType&& request) n
     return Ok(request_version, response, ContentType::kTextPlain);
   } catch (const std::exception& ex) {
     SPDLOG_ERROR("{:s}", ex.what());
-    return BadRequest(
-      request_version,
-      ex.what(),
-      ContentType::kTextPlain
-    );
+    return BadRequest(request_version, ex.what(), ContentType::kTextPlain);
   }
 }
 
-}
+}// namespace core

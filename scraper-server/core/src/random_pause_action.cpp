@@ -2,8 +2,7 @@
 
 namespace core {
 
-RandomPauseAction::RandomPauseAction(const nlohmann::json& json)
-  : OptionalAction{json} {
+RandomPauseAction::RandomPauseAction(const nlohmann::json& json) : OptionalAction{json} {
   from_ = Ms{json.at("fromMs").get<uint64_t>()};
   to_ = Ms{json.at("toMs").get<uint64_t>()};
 
@@ -12,13 +11,9 @@ RandomPauseAction::RandomPauseAction(const nlohmann::json& json)
   }
 }
 
-RandomPauseAction::RandomPauseAction(
-  bool optional,
-  const Ms& from,
-  const Ms& to
-) : OptionalAction{optional},
-    from_{from},
-    to_{to} {
+RandomPauseAction::RandomPauseAction(bool optional, const Ms& from, const Ms& to) : OptionalAction{optional},
+                                                                                    from_{from},
+                                                                                    to_{to} {
   if (from_ < to_) {
     throw std::invalid_argument{"'from' must be less than 'to' or equal"};
   }
@@ -33,12 +28,8 @@ nlohmann::json RandomPauseAction::Serialize() const {
   return json;
 }
 
-const RandomPauseAction::Ms& RandomPauseAction::FromMs() const noexcept {
-  return from_;
-}
+const RandomPauseAction::Ms& RandomPauseAction::FromMs() const noexcept { return from_; }
 
-const RandomPauseAction::Ms& RandomPauseAction::ToMs() const noexcept {
-  return to_;
-}
+const RandomPauseAction::Ms& RandomPauseAction::ToMs() const noexcept { return to_; }
 
-}
+}// namespace core

@@ -7,12 +7,14 @@ namespace core {
 
 class RemoveJobHandler : public IHttpHandler {
  public:
+
   explicit RemoveJobHandler(std::shared_ptr<PgConnectionPool> pg_pool);
 
   ExpectedResponse Handle(RequestType&& request) noexcept override;
 
  private:
+
   std::shared_ptr<PgConnectionPool> pg_pool_;
 };
 
-}
+}// namespace core

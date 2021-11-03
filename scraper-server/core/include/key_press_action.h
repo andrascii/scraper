@@ -6,6 +6,7 @@ namespace core {
 
 class KeyPressAction final : public OptionalAction {
  public:
+
   explicit KeyPressAction(const nlohmann::json& json);
   KeyPressAction(bool optional, uint64_t key_code);
 
@@ -13,7 +14,8 @@ class KeyPressAction final : public OptionalAction {
   [[nodiscard]] uint64_t KeyCode() const;
 
  private:
+
   uint64_t key_code_;
 };
 
-}
+}// namespace core

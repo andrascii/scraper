@@ -8,8 +8,8 @@ WaitForElementByXpathAction::WaitForElementByXpathAction(const nlohmann::json& j
 }
 
 WaitForElementByXpathAction::WaitForElementByXpathAction(std::string xpath, WaitForElementByXpathAction::Ms timeout)
-  : xpath_{std::move(xpath)},
-    timeout_{timeout} {}
+    : xpath_{std::move(xpath)},
+      timeout_{timeout} {}
 
 nlohmann::json WaitForElementByXpathAction::Serialize() const {
   nlohmann::json json;
@@ -19,12 +19,8 @@ nlohmann::json WaitForElementByXpathAction::Serialize() const {
   return json;
 }
 
-const std::string& WaitForElementByXpathAction::Xpath() const {
-  return xpath_;
-}
+const std::string& WaitForElementByXpathAction::Xpath() const { return xpath_; }
 
-const WaitForElementByXpathAction::Ms& WaitForElementByXpathAction::Timeout() const {
-  return timeout_;
-}
+const WaitForElementByXpathAction::Ms& WaitForElementByXpathAction::Timeout() const { return timeout_; }
 
-}
+}// namespace core

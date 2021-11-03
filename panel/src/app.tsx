@@ -38,7 +38,7 @@ export function App(): JSX.Element {
         <Sider collapsible>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
             <Menu.Item key="1" icon={<ProfileFilled translate="no"/>}>
-              Report Jobs
+              Actions
             </Menu.Item>
             <Menu.Item key="2" icon={<IeSquareFilled translate="no"/>}>
               Websites

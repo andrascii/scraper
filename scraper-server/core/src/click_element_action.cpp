@@ -3,13 +3,11 @@
 namespace core {
 
 ClickElementAction::ClickElementAction(const nlohmann::json& json)
-  : OptionalAction{json} {
-  xpath_ = json.at("xPath").get<std::string>();
-}
+    : OptionalAction{json} { xpath_ = json.at("xPath").get<std::string>(); }
 
 ClickElementAction::ClickElementAction(bool optional, std::string xpath)
-  : OptionalAction{optional},
-    xpath_{std::move(xpath)} {}
+    : OptionalAction{optional},
+      xpath_{std::move(xpath)} {}
 
 nlohmann::json ClickElementAction::Serialize() const {
   nlohmann::json json;
@@ -19,8 +17,6 @@ nlohmann::json ClickElementAction::Serialize() const {
   return json;
 }
 
-const std::string& ClickElementAction::Xpath() const noexcept {
-  return xpath_;
-}
+const std::string& ClickElementAction::Xpath() const noexcept { return xpath_; }
 
-}
+}// namespace core

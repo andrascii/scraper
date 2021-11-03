@@ -6,6 +6,7 @@ namespace core {
 
 class SetCookiesAction final : public IAction {
  public:
+
   explicit SetCookiesAction(const nlohmann::json& json);
   SetCookiesAction(std::string name, std::string value);
 
@@ -15,8 +16,9 @@ class SetCookiesAction final : public IAction {
   [[nodiscard]] const std::string& Value() const;
 
  private:
+
   std::string name_;
   std::string value_;
 };
 
-}
+}// namespace core

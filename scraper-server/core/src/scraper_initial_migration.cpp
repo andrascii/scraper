@@ -2,8 +2,7 @@
 
 namespace core {
 
-ScraperInitialMigration::ScraperInitialMigration()
-  : AbstractDbMigration{"fake_migration_id"} {}
+ScraperInitialMigration::ScraperInitialMigration() : AbstractDbMigration{"fake_migration_id"} {}
 
 void ScraperInitialMigration::Execute(const std::shared_ptr<pqxx::connection>& connection) const {
   try {
@@ -26,12 +25,16 @@ void ScraperInitialMigration::MarkAsApplied(const std::shared_ptr<pqxx::connecti
   boost::ignore_unused(connection);
 }
 
-bool ScraperInitialMigration::IsAlreadyApplied(const std::shared_ptr<pqxx::connection>& connection, const std::string& migration_id) const {
+bool ScraperInitialMigration::IsAlreadyApplied(
+  const std::shared_ptr<pqxx::connection>& connection,
+  const std::string& migration_id) const {
   boost::ignore_unused(migration_id);
 
   try {
     pqxx::work tx{*connection};
-    pqxx::result result = tx.exec("SELECT EXISTS (SELECT FROM pg_tables WHERE tablename='db_migrations')");
+    pqxx::result result = tx.exec(
+      "SELECT EXISTS (SELECT FROM pg_tables WHERE "
+      "tablename='db_migrations')");
     tx.commit();
 
     bool exists = false;
@@ -47,4 +50,4 @@ bool ScraperInitialMigration::IsAlreadyApplied(const std::shared_ptr<pqxx::conne
   }
 }
 
-}
+}// namespace core

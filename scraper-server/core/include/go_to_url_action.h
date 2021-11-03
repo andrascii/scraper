@@ -4,6 +4,7 @@ namespace core {
 
 class GoToUrlAction final : public IAction {
  public:
+
   explicit GoToUrlAction(const nlohmann::json& json);
   explicit GoToUrlAction(std::string url);
 
@@ -11,7 +12,8 @@ class GoToUrlAction final : public IAction {
   [[nodiscard]] const std::string& Url() const;
 
  private:
+
   std::string url_;
 };
 
-}
+}// namespace core

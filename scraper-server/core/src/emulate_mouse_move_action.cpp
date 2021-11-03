@@ -3,10 +3,10 @@
 namespace core {
 
 EmulateMouseMoveAction::EmulateMouseMoveAction(const nlohmann::json &json)
-  : OptionalAction{json} {}
+    : OptionalAction{json} {}
 
 EmulateMouseMoveAction::EmulateMouseMoveAction(bool is_optional)
-  : OptionalAction{is_optional} {}
+    : OptionalAction{is_optional} {}
 
 nlohmann::json EmulateMouseMoveAction::Serialize() const {
   nlohmann::json json;
@@ -15,4 +15,4 @@ nlohmann::json EmulateMouseMoveAction::Serialize() const {
   return json;
 }
 
-}
+}// namespace core

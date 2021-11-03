@@ -1,6 +1,7 @@
 #include "job_list_handler.h"
-#include "http_response_misc.h"
+
 #include "errors.h"
+#include "http_response_misc.h"
 
 namespace {
 
@@ -13,12 +14,11 @@ struct Job {
   std::vector<std::string> actions;
 };
 
-}
+}// namespace
 
 namespace core {
 
-JobListHandler::JobListHandler(std::shared_ptr<PgConnectionPool> pg_pool)
-  : pg_pool_{std::move(pg_pool)} {}
+JobListHandler::JobListHandler(std::shared_ptr<PgConnectionPool> pg_pool) : pg_pool_{std::move(pg_pool)} {}
 
 IHttpHandler::ExpectedResponse JobListHandler::Handle(RequestType&& request) noexcept {
   const auto request_version = request.version();
@@ -30,9 +30,7 @@ IHttpHandler::ExpectedResponse JobListHandler::Handle(RequestType&& request) noe
     const auto type = json.at("type").get<std::string>();
 
     if (type != kType) {
-      return common::Unexpected<>{
-        MakeErrorCode(Error::kInvalidTypeValue)
-      };
+      return common::Unexpected<>{MakeErrorCode(Error::kInvalidTypeValue)};
     }
 
     auto jobs = std::vector<Job>{};
@@ -75,12 +73,8 @@ IHttpHandler::ExpectedResponse JobListHandler::Handle(RequestType&& request) noe
     return Ok(request_version, jobs_json.dump(), ContentType::kTextPlain);
   } catch (const std::exception& ex) {
     SPDLOG_ERROR("{:s}", ex.what());
-    return BadRequest(
-      request_version,
-      ex.what(),
-      ContentType::kTextPlain
-    );
+    return BadRequest(request_version, ex.what(), ContentType::kTextPlain);
   }
 }
 
-}
+}// namespace core

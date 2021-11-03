@@ -15,15 +15,14 @@ enum class DatabaseColumnType {
 struct NullType {};
 constexpr NullType kNull;
 
-using DefaultValueType = std::variant<
-  std::monostate, // used to indicate that the variant has no value
-  bool,
-  NullType,
-  std::string,
-  int64_t,
-  uint64_t,
-  double
->;
+using DefaultValueType = std::variant<std::monostate,// used to indicate that the variant has no
+                                                     // value
+                                      bool,
+                                      NullType,
+                                      std::string,
+                                      int64_t,
+                                      uint64_t,
+                                      double>;
 
 struct UniqueKey {
   std::vector<std::string> columns;
@@ -45,10 +44,10 @@ struct ColumnDefinition {
   DatabaseColumnType column_type;
   DefaultValueType default_value;
   std::optional<Reference> reference;
-  bool unique{ false };
-  bool not_null{ false };
-  bool primary_key{ false };
-  bool auto_increment{ false };
+  bool unique{false};
+  bool not_null{false};
+  bool primary_key{false};
+  bool auto_increment{false};
 };
 
-}
+}// namespace core

@@ -46,7 +46,7 @@ list(APPEND DEPS nlohmann_json::nlohmann_json)
 #
 # collecting sources and headers
 #
-aux_source_directory(${SOURCES_DIR} SOURCES_LIST)
+file(GLOB_RECURSE SOURCES_LIST "${SOURCES_DIR}/*.cpp")
 file(GLOB_RECURSE HEADERS_LIST "${INCLUDES_DIR}/*.h")
 
 #
@@ -74,21 +74,12 @@ target_precompile_headers(${THIS_TARGET_NAME} PRIVATE ${PRECOMPILED_HEADER})
 #
 target_link_libraries(${THIS_TARGET_NAME} PRIVATE ${DEPS})
 
-#install(
-#  TARGETS ${THIS_TARGET_NAME}
-#  BUNDLE DESTINATION . COMPONENT Runtime
-#  RUNTIME DESTINATION bin COMPONENT Runtime
-#)
-
-# Note Mac specific extension .app
-#set(APPS "\${CMAKE_INSTALL_PREFIX}/${APP_NAME}.app")
-
-# Directories to look for dependencies
-#set(DIRS ${CMAKE_BINARY_DIR})
-
-#install(CODE "include(BundleUtilities) fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")")
-
-#set(CPACK_GENERATOR "DragNDrop")
-#include(CPack)
-
+#
+# What to install
+#
 install(TARGETS ${THIS_TARGET_NAME})
+
+register_for_clang_format(
+  TARGET_NAME ${THIS_TARGET_NAME}
+  SOURCES_LIST ${HEADERS_LIST} ${SOURCES_LIST}
+)

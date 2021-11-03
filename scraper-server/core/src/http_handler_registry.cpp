@@ -1,4 +1,5 @@
 #include "http_handler_registry.h"
+
 #include "errors.h"
 
 namespace core {
@@ -6,13 +7,12 @@ namespace core {
 IHttpHandler::ExpectedResponse
 HttpHandlerRegistry::HandleRequest(
   PostHttpHandlerType type,
-  IHttpHandler::RequestType&& request
-) const noexcept {
+  IHttpHandler::RequestType&& request) const noexcept {
   std::lock_guard lk{mutex_};
   const auto it = post_handlers_.find(type);
 
   if (it != end(post_handlers_)) {
-    const auto&[key, value] = *it;
+    const auto& [key, value] = *it;
     return value->Handle(std::move(request));
   }
 
@@ -24,13 +24,12 @@ HttpHandlerRegistry::HandleRequest(
 IHttpHandler::ExpectedResponse
 HttpHandlerRegistry::HandleRequest(
   GetHttpHandlerType type,
-  IHttpHandler::RequestType&& request
-) const noexcept {
+  IHttpHandler::RequestType&& request) const noexcept {
   std::lock_guard lk{mutex_};
   const auto it = get_handlers_.find(type);
 
   if (it != end(get_handlers_)) {
-    const auto&[key, value] = *it;
+    const auto& [key, value] = *it;
     return value->Handle(std::move(request));
   }
 
@@ -51,7 +50,9 @@ void HttpHandlerRegistry::AddPostHandler(PostHttpHandlerType type, const std::sh
     const auto expected_handler_name = FromPostHttpHandlerType(type);
 
     if (!expected_handler_name) {
-      SPDLOG_ERROR("attempt to add already existing HTTP handler but it's name is undefined");
+      SPDLOG_ERROR(
+        "attempt to add already existing HTTP handler but it's name is "
+        "undefined");
     } else {
       SPDLOG_WARN("attempt to add already existing HTTP handler: {:s}", *expected_handler_name);
     }
@@ -74,7 +75,9 @@ void HttpHandlerRegistry::AddGetHandler(GetHttpHandlerType type, const std::shar
     const auto expected_handler_name = FromGetHttpHandlerType(type);
 
     if (!expected_handler_name) {
-      SPDLOG_ERROR("attempt to add already existing GET HTTP handler but it's name is undefined");
+      SPDLOG_ERROR(
+        "attempt to add already existing GET HTTP handler but it's name is "
+        "undefined");
     } else {
       SPDLOG_WARN("attempt to add already existing GET HTTP handler: {:s}", *expected_handler_name);
     }
@@ -93,4 +96,4 @@ void HttpHandlerRegistry::RemoveGetHandler(GetHttpHandlerType type) noexcept {
   get_handlers_.erase(type);
 }
 
-}
+}// namespace core

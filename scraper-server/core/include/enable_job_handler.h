@@ -7,12 +7,14 @@ namespace core {
 
 class EnableJobHandler final : public IHttpHandler {
  public:
+
   explicit EnableJobHandler(std::shared_ptr<PgConnectionPool> pg_pool);
 
   ExpectedResponse Handle(RequestType&& request) noexcept override;
 
  private:
+
   std::shared_ptr<PgConnectionPool> pg_pool_;
 };
 
-}
+}// namespace core

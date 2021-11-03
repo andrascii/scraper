@@ -6,6 +6,7 @@ namespace core {
 
 class TypeTextOnElementByXpathAction final : public OptionalAction {
  public:
+
   explicit TypeTextOnElementByXpathAction(const nlohmann::json& json);
   TypeTextOnElementByXpathAction(bool optional, std::string text, std::string xpath);
 
@@ -15,8 +16,9 @@ class TypeTextOnElementByXpathAction final : public OptionalAction {
   [[nodiscard]] const std::string& Xpath() const;
 
  private:
+
   std::string text_;
   std::string xpath_;
 };
 
-}
+}// namespace core

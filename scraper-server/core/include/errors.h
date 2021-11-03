@@ -18,10 +18,11 @@ enum class Error {
 auto MakeErrorCode(Error code) noexcept -> std::error_code;
 auto MakeErrorCode(boost::system::error_code error) noexcept -> std::error_code;
 
-}
+}// namespace core
 
 namespace std {
 
-template <> struct is_error_code_enum<core::Error> : public true_type {};
+template <>
+struct is_error_code_enum<core::Error> : public true_type {};
 
-}
+}// namespace std

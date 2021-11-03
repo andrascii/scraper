@@ -1,16 +1,18 @@
 #pragma once
 
-#include "imigration_factory.h"
 #include "abstract_db_migration.h"
+#include "imigration_factory.h"
 #include "not_null.h"
 
 namespace core {
 
 class MigrationFactory : public IMigrationFactory {
  public:
+
   [[nodiscard]] ExpectedMigration Create(Database db) const override;
 
  private:
+
   using MigrationPointer = common::NotNull<std::shared_ptr<IDbMigration>>;
 
   [[nodiscard]] static ExpectedMigration ScraperMigration() noexcept;
@@ -22,4 +24,4 @@ class MigrationFactory : public IMigrationFactory {
   [[nodiscard]] static MigrationPointer ReportResultsCreateTableMigration();
 };
 
-}
+}// namespace core

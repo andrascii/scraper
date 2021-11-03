@@ -9,15 +9,10 @@ namespace core {
 //
 class HttpHandlerRegistry final : public IHttpHandlerRegistry {
  public:
-  IHttpHandler::ExpectedResponse HandleRequest(
-    PostHttpHandlerType type,
-    IHttpHandler::RequestType&& request
-  ) const noexcept override;
 
-  IHttpHandler::ExpectedResponse HandleRequest(
-    GetHttpHandlerType type,
-    IHttpHandler::RequestType&& request
-  ) const noexcept override;
+  IHttpHandler::ExpectedResponse HandleRequest(PostHttpHandlerType type, IHttpHandler::RequestType&& request) const noexcept override;
+
+  IHttpHandler::ExpectedResponse HandleRequest(GetHttpHandlerType type, IHttpHandler::RequestType&& request) const noexcept override;
 
   void AddPostHandler(PostHttpHandlerType type, const std::shared_ptr<IHttpHandler>& handler) override;
   void AddGetHandler(GetHttpHandlerType type, const std::shared_ptr<IHttpHandler>& handler) override;
@@ -26,6 +21,7 @@ class HttpHandlerRegistry final : public IHttpHandlerRegistry {
   void RemoveGetHandler(GetHttpHandlerType type) noexcept override;
 
  private:
+
   using HandlerPtr = std::shared_ptr<IHttpHandler>;
 
   mutable std::mutex mutex_;
@@ -33,4 +29,4 @@ class HttpHandlerRegistry final : public IHttpHandlerRegistry {
   std::unordered_map<PostHttpHandlerType, HandlerPtr> post_handlers_;
 };
 
-}
+}// namespace core

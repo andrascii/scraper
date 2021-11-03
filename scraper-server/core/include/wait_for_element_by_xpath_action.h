@@ -6,6 +6,7 @@ namespace core {
 
 class WaitForElementByXpathAction final : public IAction {
  public:
+
   using Ms = std::chrono::milliseconds;
 
   explicit WaitForElementByXpathAction(const nlohmann::json& json);
@@ -17,8 +18,9 @@ class WaitForElementByXpathAction final : public IAction {
   [[nodiscard]] const Ms& Timeout() const;
 
  private:
+
   std::string xpath_;
-  Ms timeout_{};
+  Ms timeout_;
 };
 
-}
+}// namespace core

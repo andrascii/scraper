@@ -6,6 +6,7 @@ namespace core {
 
 class OptionalAction : public IAction {
  public:
+
   explicit OptionalAction(bool is_optional);
   explicit OptionalAction(const nlohmann::json& json);
 
@@ -14,7 +15,8 @@ class OptionalAction : public IAction {
   bool IsOptional() const noexcept;
 
  private:
+
   bool is_optional_;
 };
 
-}
+}// namespace core
