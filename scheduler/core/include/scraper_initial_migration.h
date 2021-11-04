@@ -14,7 +14,9 @@ class ScraperInitialMigration : public AbstractDbMigration {
 
   void Execute(const std::shared_ptr<pqxx::connection>& connection) const override;
   void MarkAsApplied(const std::shared_ptr<pqxx::connection>& connection) const override;
-  [[nodiscard]] bool IsAlreadyApplied(const std::shared_ptr<pqxx::connection>& connection, const std::string& migration_id) const override;
+  [[nodiscard]] bool IsAlreadyApplied(
+    const std::shared_ptr<pqxx::connection>& connection,
+    const std::string& migration_id) const override;
 };
 
 }// namespace core
