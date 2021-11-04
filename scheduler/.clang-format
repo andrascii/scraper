@@ -29,6 +29,8 @@ BraceWrapping:
   IndentBraces: false
   SplitEmptyFunction: false
   SplitEmptyRecord: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
 BreakBeforeBinaryOperators: None
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializers: BeforeColon
