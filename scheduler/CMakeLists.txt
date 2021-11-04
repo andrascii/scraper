@@ -18,7 +18,7 @@ if (UNIX AND NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT CMAKE_CXX_COMPILE
   set(CMAKE_CXX_COMPILER "clang++")
 endif()
 
-project("Scraper" LANGUAGES C CXX)
+project("scheduler" LANGUAGES C CXX)
 
 #
 # adding another one path to find .cmake files
