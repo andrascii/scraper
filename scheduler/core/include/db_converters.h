@@ -6,41 +6,49 @@ namespace core {
 
 constexpr const char* ToString(DatabaseColumnType type) noexcept {
   switch (type) {
-    case DatabaseColumnType::kInt:
+    case DatabaseColumnType::kInt: {
       return "INTEGER";
-    case DatabaseColumnType::kBigInt:
+    }
+    case DatabaseColumnType::kBigInt: {
       return "BIGINT";
-    case DatabaseColumnType::kText:
+    }
+    case DatabaseColumnType::kText: {
       return "TEXT";
-    case DatabaseColumnType::kBlob:
+    }
+    case DatabaseColumnType::kBlob: {
       return "BYTEA";
-    case DatabaseColumnType::kBoolean:
+    }
+    case DatabaseColumnType::kBoolean: {
       return "boolean";
-    case DatabaseColumnType::kTimestamp:
+    }
+    case DatabaseColumnType::kTimestamp: {
       return "timestamp without time zone";
-    case DatabaseColumnType::kVarChar256:
+    }
+    case DatabaseColumnType::kVarChar256: {
       return "character varying(256)";
+    }
   }
 
   abort();
 }
 
 inline std::string DefaultValueToPostgreSqlString(const DefaultValueType& value) {
-  common::VariantVisitor visitor{[](std::monostate) {
-                                   common::Logger()->critical("Column default type is in invalid state");
-                                   abort();
-                                   return "invalid state"s;
-                                 },
-                                 [](bool value) { return value ? "true"s : "false"s; },
-                                 [](NullType) { return "null"s; },
-                                 [](const std::string& value) {
-                                   std::stringstream stream;
-                                   stream << std::quoted(value, '\'');
-                                   return stream.str();
-                                 },
-                                 [](int64_t value) { return std::to_string(value); },
-                                 [](uint64_t value) { return std::to_string(value); },
-                                 [](double value) { return std::to_string(value); }};
+  common::VariantVisitor visitor{
+    [](std::monostate) {
+      SPDLOG_CRITICAL("Column default type is in invalid state");
+      abort();
+      return "invalid state"s;
+    },
+    [](bool value) { return value ? "true"s : "false"s; },
+    [](NullType) { return "null"s; },
+    [](const std::string& value) {
+      std::stringstream stream;
+      stream << std::quoted(value, '\'');
+      return stream.str();
+    },
+    [](int64_t value) { return std::to_string(value); },
+    [](uint64_t value) { return std::to_string(value); },
+    [](double value) { return std::to_string(value); }};
 
   return std::visit(visitor, value);
 }
@@ -86,10 +94,14 @@ inline std::string ColumnToPostgreSqlString(const ColumnDefinition& column, cons
   return boost::algorithm::join(lst, " ");
 }
 
-inline std::string DropColumnString(const std::string& column_name) { return "DROP COLUMN " + column_name; }
+inline std::string DropColumnString(const std::string& column_name) {
+  return "DROP COLUMN " + column_name;
+}
 
 inline std::string ForeignKeyToPostgreSqlString(const ForeignKey& foreign_key, const std::string& prefix = "") {
-  return prefix + "CONSTRAINT fk_" + boost::algorithm::join(foreign_key.columns, "_") + " " + "FOREIGN KEY(" +
+  return prefix +
+         "CONSTRAINT fk_" +
+         boost::algorithm::join(foreign_key.columns, "_") + " " + "FOREIGN KEY(" +
          boost::algorithm::join(foreign_key.columns, ", ") + ") " + "REFERENCES " + foreign_key.foreign_table + "(" +
          boost::algorithm::join(foreign_key.foreign_columns, ",") + ")";
 }
