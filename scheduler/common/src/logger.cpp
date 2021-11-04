@@ -2,7 +2,7 @@
 
 namespace {
 
-constexpr auto kLogFileName{"dbproxy.log"};
+constexpr auto kLogFileName{"scheduler.log"};
 
 struct DailyLogFileName final {
   static spdlog::filename_t calc_filename(const spdlog::filename_t& filename, const tm& now_tm) {
