@@ -4,12 +4,13 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Ap
   add_compile_options("-Wall")
   add_compile_options("-Wextra")
   add_compile_options("-Werror")
-  add_compile_options("-msse4.2")
+  #add_compile_options("-msse4.2")
   add_compile_options("-Werror=return-type")
   add_compile_options("-Wno-implicit-fallthrough")
   add_compile_options("-Wno-unused-parameter")
   add_compile_options("-pedantic")
   add_compile_options("-Wunknown-pragmas")
+  add_compile_options("-Wunused-command-line-argument")
 
   if (APPLE)
     # without these options on MacOS ld will show up warnings

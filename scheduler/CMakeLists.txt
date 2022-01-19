@@ -69,6 +69,8 @@ find_path(
   PATH_SUFFIXES cppkafka
 )
 
+message(STATUS "CPPKAFKA DEBUG PATH: ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug")
+
 find_library(
   CPPKAFKA_LIBRARY_DEBUG
   NAMES cppkafka
